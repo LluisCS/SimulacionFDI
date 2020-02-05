@@ -1,0 +1,2 @@
+scriptable object subject ->hour, rooms, name
+scriptable object agent->student or teacher,subjects, name, personality*

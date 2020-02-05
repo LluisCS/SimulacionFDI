@@ -12,7 +12,11 @@ public class DayTime : MonoBehaviour
     }
     private int hours = 0, minutes = 0;
     private double seconds = 0;
+    private weekDay day = weekDay.Monday;
     public double timeSpeed = 1.0f;
+    public double simulationSpeed = 1.0f;
+    public bool activeLog = false;
+
     void Awake()
     {
         if (instance == null)
@@ -24,17 +28,24 @@ public class DayTime : MonoBehaviour
     void Update()
     {
         seconds += Time.deltaTime * timeSpeed;
-        if(seconds >= 60){
+        while(seconds >= 60){
             minutes++;
             seconds -= 60;
         }
-        if(minutes >= 60)
+        while(minutes >= 60)
         {
             minutes -= 60;
             hours++;
         }
         if (hours > 23)
-            hours = 0;
+        {
+            hours -= 24;
+            day++;
+            if ((int)day > 4)
+                day = 0;
+        }
+        if (activeLog)
+            Debug.Log("Time is: "+ day.ToString()+ " " + hours + ":" + minutes);
     }
 
     public int Hour()
@@ -50,5 +61,10 @@ public class DayTime : MonoBehaviour
     public double Second()
     {
         return seconds;
+    }
+
+    public weekDay WeekDay()
+    {
+        return day;
     }
 }

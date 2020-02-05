@@ -12,10 +12,12 @@ public struct Room
 {
     public Vector3 entrance;
     public List<Seat> seats;
+    public string name;
 }
 public struct Floor
 {
     public List<Room> rooms;
+    public string name;
 }
 
 public class LayoutGenerator : MonoBehaviour
@@ -36,12 +38,14 @@ public class LayoutGenerator : MonoBehaviour
         {
             Floor tmpFloor;
             tmpFloor.rooms = new List<Room>();
+            tmpFloor.name = floor.name;
             Debug.Log("Adding floor");
             foreach (Transform room in floor.transform)
             {
                 Room tmpRoom;
                 tmpRoom.seats = new List<Seat>();
                 tmpRoom.entrance = room.transform.position;
+                tmpRoom.name = room.name;
                 foreach (Transform seat in room.transform)
                 {
                     Seat tmpSeat;
