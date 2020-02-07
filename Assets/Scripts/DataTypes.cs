@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-[System.Serializable]
-public enum personality { }
 
 [CreateAssetMenu]
 public class SubjectData : ScriptableObject
@@ -24,12 +22,3 @@ public class TeacherData : ScriptableObject
     public string[] classNames;
 }
 
-public struct subject
-{
-    public bool active;
-    public string name;
-    public int startHour, startMinute, endHour, endMinute;
-    public GameObject room;
-    public GameObject[] teachers;
-    public GameObject[] students;
-}

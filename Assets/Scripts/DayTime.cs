@@ -15,7 +15,7 @@ public class DayTime : MonoBehaviour
     private weekDay day = weekDay.Monday;
     public double timeSpeed = 1.0f;
     public double simulationSpeed = 1.0f;
-    public bool activeLog = false;
+    public bool logs = false;
 
     void Awake()
     {
@@ -44,8 +44,7 @@ public class DayTime : MonoBehaviour
             if ((int)day > 4)
                 day = 0;
         }
-        if (activeLog)
-            Debug.Log("Time is: "+ day.ToString()+ " " + hours + ":" + minutes);
+        if (logs) Debug.Log("Time is: "+ day.ToString()+ " " + hours + ":" + minutes);
     }
 
     public int Hour()
