@@ -25,12 +25,15 @@ public class DataManager : MonoBehaviour
             SubjectInfo info = new SubjectInfo();
             foreach (var hour in sub.classes)
             {
-                //check if already in the list
-                info.rooms.Add(LManager.getRoom(hour.roomName));
-                Subject s = new Subject( hour.startHour, hour.startMinute, hour.durationHours, hour.durationMinutes,sub.name,info);
+                Subject s = new Subject( hour.startHour, hour.startMinute, hour.durationHours, hour.durationMinutes,sub.name, LManager.getRoom(hour.roomName),info);
                 subSchedule.days[(int)hour.day].Add(s);
             }
             subSchedule.subjectInfos.Add(sub.name, info);
+        }
+
+        foreach (var teacher in teachersData)
+        {
+
         }
         return subSchedule;
     }

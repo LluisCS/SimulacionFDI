@@ -12,6 +12,7 @@ public struct Room
     public Vector3 entrance;
     public List<Seat> seats;
     public List<Seat> teacherSeats;
+    public bool occupied;
     public string name;
 }
 public struct Floor
@@ -44,6 +45,7 @@ public class LayoutManager : MonoBehaviour
                 tmpRoom.teacherSeats = new List<Seat>();
                 tmpRoom.entrance = room.transform.position;
                 tmpRoom.name = room.name;
+                tmpRoom.occupied = false;
                 if (logs) Debug.Log("Adding room");
                 foreach (Transform seat in room.transform)
                 {
@@ -88,6 +90,7 @@ public class LayoutManager : MonoBehaviour
         r.seats = new List<Seat>(0);
         r.teacherSeats = new List<Seat>(0);
         r.entrance = Vector3.zero;
+        r.occupied = false;
         return r;
     }
 

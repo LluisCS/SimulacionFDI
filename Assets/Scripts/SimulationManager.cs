@@ -48,12 +48,16 @@ public class SimulationManager : MonoBehaviour
         }
 
         weekDay day = DayTime.Instance().WeekDay();
-        int hour = DayTime.Instance().Hour();
-        int minute = DayTime.Instance().Minute();
+        uint hour = (uint)DayTime.Instance().Hour();
+        uint minute = (uint)DayTime.Instance().Minute();
 
-        foreach (Subject item in schedule.days[(int)day])
+        foreach (Subject s in schedule.days[(int)day])
         {
-            //incomplete
+           operation op = s.update(hour, minute);
+            if (op == operation.add)
+                schedule.activeSubjects.Add(s.name);
+            else if(op== operation.remove)
+                schedule.activeSubjects.Remove(s.name);
         }
     }
 
