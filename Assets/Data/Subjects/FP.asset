@@ -11,18 +11,18 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
   m_Name: FP
-  m_EditorClassIdentifier: Assembly-CSharp::Subject
+  m_EditorClassIdentifier: Assembly-CSharp::SubjectData
   name: FP
   classes:
-  - roomName: Aula2
+  - roomName: Aula1
     day: 0
-    startHour: 10
+    startHour: 9
     startMinute: 0
     durationHours: 1
-    durationMinutes: 45
-  - roomName: Aula2
+    durationMinutes: 50
+  - roomName: Aula1
     day: 2
-    startHour: 10
+    startHour: 9
     startMinute: 0
     durationHours: 1
-    durationMinutes: 45
+    durationMinutes: 50

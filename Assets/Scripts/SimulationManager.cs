@@ -35,17 +35,17 @@ public class SimulationManager : MonoBehaviour
     
     void Update()
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0)
-        {
-            timer = cooldown;
-            foreach (Transform item in agent.transform)
-            {
-                NavMeshAgent agentComp = (NavMeshAgent)item.GetComponent("NavMeshAgent");
-                dGoToRandom(agentComp);
-            }
+        //timer -= Time.deltaTime;
+        //if (timer <= 0)
+        //{
+        //    timer = cooldown;
+        //    foreach (Transform item in agent.transform)
+        //    {
+        //        NavMeshAgent agentComp = (NavMeshAgent)item.GetComponent("NavMeshAgent");
+        //        dGoToRandom(agentComp);
+        //    }
 
-        }
+        //}
 
         weekDay day = DayTime.Instance().WeekDay();
         uint hour = (uint)DayTime.Instance().Hour();
@@ -59,6 +59,11 @@ public class SimulationManager : MonoBehaviour
             else if(op== operation.remove)
                 schedule.activeSubjects.Remove(s.name);
         }
+    }
+
+    public Vector3 getRandomEntrance()
+    {
+        return layoutManager.getRandomEntrance();
     }
 
     void dGoToRandom(NavMeshAgent agentComp)

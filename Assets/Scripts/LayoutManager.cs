@@ -2,28 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Seat
-{
-    public bool occupied;
-    public Vector3 position;
-}
-public struct Room
-{
-    public Vector3 entrance;
-    public List<Seat> seats;
-    public List<Seat> teacherSeats;
-    public bool occupied;
-    public string name;
-}
-public struct Floor
-{
-    public List<Room> rooms;
-    public string name;
-}
-
 public class LayoutManager : MonoBehaviour
 {
     public GameObject layoutObject;
+    public GameObject entranceObject;
     public List<Floor> FDI;
     public bool logs = false;
     
@@ -34,24 +16,15 @@ public class LayoutManager : MonoBehaviour
         FDI = new List<Floor>();
         foreach (Transform floor in layoutObject.transform)
         {
-            Floor tmpFloor;
-            tmpFloor.rooms = new List<Room>();
-            tmpFloor.name = floor.name;
+            Floor tmpFloor = new Floor(floor.name);
             if (logs) Debug.Log("Adding floor");
             foreach (Transform room in floor.transform)
             {
-                Room tmpRoom;
-                tmpRoom.seats = new List<Seat>();
-                tmpRoom.teacherSeats = new List<Seat>();
-                tmpRoom.entrance = room.transform.position;
-                tmpRoom.name = room.name;
-                tmpRoom.occupied = false;
+                Room tmpRoom = new Room(room.name, room.transform.position);
                 if (logs) Debug.Log("Adding room");
                 foreach (Transform seat in room.transform)
                 {
-                    Seat tmpSeat;
-                    tmpSeat.position = seat.transform.position;
-                    tmpSeat.occupied = false;
+                    Seat tmpSeat = new Seat(seat.transform.position);
                     tmpRoom.seats.Add(tmpSeat);
                 }
                 tmpFloor.rooms.Add(tmpRoom);
@@ -69,7 +42,7 @@ public class LayoutManager : MonoBehaviour
                     return room;
 
         Debug.LogWarning("Room with name " + name + " not found.");
-        return emptyRoom();
+        return null;
     }
 
     public Floor getRoomFloor(string name)
@@ -80,25 +53,12 @@ public class LayoutManager : MonoBehaviour
                     return floor;
 
         Debug.LogWarning("Floor of room with name " + name + " not found.");
-        return emptyFloor();
+        return null;
     }
 
-    private Room emptyRoom()
+    public Vector3 getRandomEntrance()
     {
-        Room r;
-        r.name = "NoRoom";
-        r.seats = new List<Seat>(0);
-        r.teacherSeats = new List<Seat>(0);
-        r.entrance = Vector3.zero;
-        r.occupied = false;
-        return r;
-    }
-
-    private Floor emptyFloor()
-    {
-        Floor f;
-        f.name = "NoFloor";
-        f.rooms = new List<Room>(0);
-        return f;
+        int rnd = Random.Range(0, entranceObject.transform.childCount-1);
+        return entranceObject.transform.GetChild(rnd).position;
     }
 }

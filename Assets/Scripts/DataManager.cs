@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
+    public GameObject agentPrefab;
     public SubjectData[] subjectsData;
     public TeacherData[] teachersData;
     public StudentData[] studentsData;
@@ -34,6 +35,19 @@ public class DataManager : MonoBehaviour
         foreach (var teacher in teachersData)
         {
 
+        }
+        GameObject studentParent = new GameObject("studentParent");
+        foreach (var student in studentsData)
+        {
+            GameObject agentObj = Instantiate(agentPrefab);
+            agentObj.transform.SetParent(studentParent.transform);
+            Agent agentComp = agentObj.GetComponent<Agent>();
+            if (agentComp == null)
+                Debug.LogError("Agent prefab missing agent component.");
+            else
+            {
+                
+            }
         }
         return subSchedule;
     }
