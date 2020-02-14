@@ -1,22 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 public enum agentState { inactive, enter, work, exit, relax, other}
 [RequireComponent(typeof(NavMeshAgent))]
 public class Agent : MonoBehaviour
 {
-    private NavMeshAgent navAgent;
-    private agentState state;
-    private string currentSubject = "None";
     public Dictionary<string, SubjectInfo> subjects;
+    public string currentSubject = "None";
+    
+    private NavMeshAgent navAgent;
+    public agentState state;
     private Seat targetSeat = null;
     private Room targetRoom = null;
     private string simulation = "Regular";
     private bool moving = false, started = false;
     private int remainingSubjects = 0;
 
-    void Start()
+    void Awake()
     {
         state = agentState.inactive;
         subjects = new Dictionary<string, SubjectInfo>(0);
@@ -39,9 +39,9 @@ public class Agent : MonoBehaviour
 
     }
 
-    public void subjectUpdate(string name, subjectState subState, Room room)
+    public void subjectUpdate(string n, subjectState subState, Room room)
     {
-        if (!subjects.ContainsKey(name) || simulation != "Regular")
+        if (!subjects.ContainsKey(n) || simulation != "Regular")
             return;
         if (!started)
         {
@@ -51,10 +51,10 @@ public class Agent : MonoBehaviour
         switch (subState)
         {
             case subjectState.active:
-                if(targetRoom != room  || state != agentState.work)
+                if(currentSubject != n  || state != agentState.work)
                 {
                     resetTarget();
-                    currentSubject = name;
+                    currentSubject = n;
                     targetRoom = room;
                     targetSeat = room.getFirstFreeSeat();
                     targetSeat.occupied = true;
@@ -66,8 +66,9 @@ public class Agent : MonoBehaviour
             case subjectState.start:
                 if(state != agentState.work )
                 {
+                    //Debug.Log(name + " started " + n);
                     resetTarget();
-                    currentSubject = name;
+                    currentSubject = n;
                     targetRoom = room;
                     targetSeat = room.getFirstFreeSeat();
                     targetSeat.occupied = true;
@@ -78,7 +79,7 @@ public class Agent : MonoBehaviour
                 break;
             
             case subjectState.end:
-                if(state == agentState.work)
+                if(currentSubject == n)
                 {
                     resetTarget();
                     state = agentState.exit;
@@ -87,7 +88,7 @@ public class Agent : MonoBehaviour
                 }
                 break;
             case subjectState.inactive:
-                if (targetRoom == room)
+                if (currentSubject == n)
                 {
                     resetTarget();
                 }

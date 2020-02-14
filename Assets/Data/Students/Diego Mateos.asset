@@ -11,8 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
   m_Name: Diego Mateos
-  m_EditorClassIdentifier: Assembly-CSharp::Student
+  m_EditorClassIdentifier: Assembly-CSharp::StudentData
   name: Diego Mateos
   classNames:
   - FP
-  - FC

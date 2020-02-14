@@ -15,6 +15,7 @@ public class DayTime : MonoBehaviour
     private weekDay day = weekDay.Monday;
     public double timeSpeed = 1.0f;
     public double simulationSpeed = 1.0f;
+    public int initialHour = 7;
     public bool logs = false;
 
     void Awake()
@@ -23,6 +24,7 @@ public class DayTime : MonoBehaviour
             instance = this;
         else
             Destroy(this);
+        hours = initialHour;
     }
 
     void Update()
@@ -36,6 +38,7 @@ public class DayTime : MonoBehaviour
         {
             minutes -= 60;
             hours++;
+            if (!logs) Debug.Log(hours);
         }
         if (hours > 23)
         {

@@ -15,12 +15,8 @@ public class SimulationManager : MonoBehaviour
     private DataManager dataManager;
     private LayoutManager layoutManager;
     public SubjectSchedule schedule;
-    private float timer = 0;
-    public float cooldown = 5;
-    public bool waitForDestination = true;
+    public bool logs = false;
 
-    public SubjectSchedule subjectSchedule;
-    public GameObject agent; 
     void Start()
     {
         if (instance == null)
@@ -29,7 +25,7 @@ public class SimulationManager : MonoBehaviour
             Destroy(this);
         dataManager = GetComponent<DataManager>();
         layoutManager = GetComponent<LayoutManager>();
-        subjectSchedule = dataManager.generateSchedule(layoutManager);
+        schedule = dataManager.generateSchedule(layoutManager);
     }
 
     
@@ -50,14 +46,22 @@ public class SimulationManager : MonoBehaviour
         weekDay day = DayTime.Instance().WeekDay();
         uint hour = (uint)DayTime.Instance().Hour();
         uint minute = (uint)DayTime.Instance().Minute();
-
+        //Debug.Log((int)day);
         foreach (Subject s in schedule.days[(int)day])
         {
-           operation op = s.update(hour, minute);
+            //if (logs) Debug.Log(s.name + " exists");
+
+            operation op = s.update(hour, minute);
             if (op == operation.add)
+            {
                 schedule.activeSubjects.Add(s.name);
+                if (logs) Debug.Log(s.name + " has started.");
+            }
             else if(op== operation.remove)
+            {
+                if (logs) Debug.Log(s.name + " has ended.");
                 schedule.activeSubjects.Remove(s.name);
+            }
         }
     }
 
@@ -66,17 +70,17 @@ public class SimulationManager : MonoBehaviour
         return layoutManager.getRandomEntrance();
     }
 
-    void dGoToRandom(NavMeshAgent agentComp)
-    {
-        int rnd = Random.Range(0, layoutManager.FDI.Count);
-        //rnd = 0;
-        int rnd2 = Random.Range(0, layoutManager.FDI[rnd].rooms.Count);
-        //rnd2 = 0;
-        int rnd3 = Random.Range(0, layoutManager.FDI[rnd].rooms[rnd2].seats.Count);
+    //void dGoToRandom(NavMeshAgent agentComp)
+    //{
+    //    int rnd = Random.Range(0, layoutManager.FDI.Count);
+    //    //rnd = 0;
+    //    int rnd2 = Random.Range(0, layoutManager.FDI[rnd].rooms.Count);
+    //    //rnd2 = 0;
+    //    int rnd3 = Random.Range(0, layoutManager.FDI[rnd].rooms[rnd2].seats.Count);
 
-        if (waitForDestination && agentComp.remainingDistance > 0.5)
-            return;
-        agentComp.SetDestination(layoutManager.FDI[rnd].rooms[rnd2].seats[rnd3].position);
-        //Debug.Log(FDI[rnd].rooms[rnd2].seats[rnd3].position.ToString());
-    }
+    //    if (waitForDestination && agentComp.remainingDistance > 0.5)
+    //        return;
+    //    agentComp.SetDestination(layoutManager.FDI[rnd].rooms[rnd2].seats[rnd3].position);
+    //    //Debug.Log(FDI[rnd].rooms[rnd2].seats[rnd3].position.ToString());
+    //}
 }

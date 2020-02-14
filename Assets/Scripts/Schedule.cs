@@ -11,12 +11,12 @@ public enum operation { add, remove, nothing }
 public class SubjectInfo
 {
     public subjectState state;
-    public Agent[] teachers;
-    public Agent[] students;
+    public List<Agent> teachers;
+    public List<Agent> students;
     public SubjectInfo()
     {
-        teachers = new Agent[0];
-        students = new Agent[0];
+        teachers = new List<Agent>(0);
+        students = new List<Agent>(0);
         state = subjectState.inactive;
     }
 }
@@ -45,6 +45,10 @@ public class SubjectSchedule
     public SubjectSchedule()
     {
         days = new List<Subject>[5];
+        for (int i = 0; i < days.Length; i++)
+        {
+            days[i] = new List<Subject>(0);
+        }
         activeSubjects = new List<string>(0);
         subjectInfos = new Dictionary<string, SubjectInfo>(0);
     }

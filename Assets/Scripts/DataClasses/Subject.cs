@@ -43,21 +43,21 @@ public class Subject
         switch (info.state)
         {
             case subjectState.start:
-                if (h * 60 + min > startHour * 60 + startMinute)
+                if ((h * 60) + min > (startHour * 60) + startMinute)
                 {
                     info.state = subjectState.active;
                     messageAgents();
                 }
                 break;
             case subjectState.active:
-                if (h * 60 + min > endHour * 60 + endMinute)
+                if ((h * 60) + min > (endHour * 60) + endMinute)
                 {
                     info.state = subjectState.end;
                     messageAgents();
                 }
                 break;
             case subjectState.end:
-                if (h * 60 + min > endHour * 60 + endMinute + 5)
+                if ((h * 60) + min > (endHour * 60) + endMinute + 5)
                 {
                     op = operation.remove;
                     info.state = subjectState.inactive;
@@ -65,7 +65,7 @@ public class Subject
                 }
                 break;
             case subjectState.inactive:
-                if (h * 60 + min > startHour * 60 + startMinute - 5 && h * 60 + min < endHour * 60 + endMinute)
+                if ((h * 60) + min > (startHour * 60) + startMinute - 5 && (h * 60) + min < (endHour * 60) + endMinute)
                 {
                     op = operation.add;
                     info.state = subjectState.start;
