@@ -5,6 +5,8 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public GameObject agentPrefab;
+    [HideInInspector]
+    public GameObject studentParent, teacherParent;
     public SubjectData[] subjectsData;
     public TeacherData[] teachersData;
     public StudentData[] studentsData;
@@ -32,7 +34,7 @@ public class DataManager : MonoBehaviour
             schedule.subjectInfos.Add(sub.name, info);
         }
 
-        GameObject teacherParent = new GameObject("teacherParent");
+        teacherParent = new GameObject("teacherParent");
         foreach (var teacher in teachersData)
         {
             GameObject agentObj = Instantiate(agentPrefab);
@@ -50,7 +52,7 @@ public class DataManager : MonoBehaviour
                 }
             }
         }
-        GameObject studentParent = new GameObject("studentParent");
+        studentParent = new GameObject("studentParent");
         foreach (var student in studentsData)
         {
             GameObject agentObj = Instantiate(agentPrefab);

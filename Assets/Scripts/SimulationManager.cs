@@ -16,6 +16,7 @@ public class SimulationManager : MonoBehaviour
     private LayoutManager layoutManager;
     public SubjectSchedule schedule;
     public bool logs = false;
+    private weekDay day = weekDay.Monday;
 
     void Start()
     {
@@ -26,24 +27,18 @@ public class SimulationManager : MonoBehaviour
         dataManager = GetComponent<DataManager>();
         layoutManager = GetComponent<LayoutManager>();
         schedule = dataManager.generateSchedule(layoutManager);
+
+        startDay(DayTime.Instance().WeekDay());
     }
 
     
     void Update()
     {
-        //timer -= Time.deltaTime;
-        //if (timer <= 0)
-        //{
-        //    timer = cooldown;
-        //    foreach (Transform item in agent.transform)
-        //    {
-        //        NavMeshAgent agentComp = (NavMeshAgent)item.GetComponent("NavMeshAgent");
-        //        dGoToRandom(agentComp);
-        //    }
+        if (day != DayTime.Instance().WeekDay())
+            startDay(DayTime.Instance().WeekDay());
 
-        //}
 
-        weekDay day = DayTime.Instance().WeekDay();
+        day = DayTime.Instance().WeekDay();
         uint hour = (uint)DayTime.Instance().Hour();
         uint minute = (uint)DayTime.Instance().Minute();
         //Debug.Log((int)day);
@@ -55,12 +50,31 @@ public class SimulationManager : MonoBehaviour
             if (op == operation.add)
             {
                 schedule.activeSubjects.Add(s.name);
+                s.room.occupied = true;
                 if (logs) Debug.Log(s.name + " has started.");
             }
             else if(op== operation.remove)
             {
                 if (logs) Debug.Log(s.name + " has ended.");
                 schedule.activeSubjects.Remove(s.name);
+                s.room.occupied = false;
+            }
+        }
+    }
+
+    private void startDay(weekDay day)
+    {
+        foreach (Transform student in dataManager.studentParent.transform)
+        {
+            Agent ag = student.GetComponent<Agent>();
+            ag.startDay();
+        }
+        schedule.activeSubjects.Clear();
+        foreach (Subject s in schedule.days[(int)day])
+        {
+            foreach (var student in s.info.students)
+            {
+                student.addSubjectCount();
             }
         }
     }
@@ -69,18 +83,4 @@ public class SimulationManager : MonoBehaviour
     {
         return layoutManager.getRandomEntrance();
     }
-
-    //void dGoToRandom(NavMeshAgent agentComp)
-    //{
-    //    int rnd = Random.Range(0, layoutManager.FDI.Count);
-    //    //rnd = 0;
-    //    int rnd2 = Random.Range(0, layoutManager.FDI[rnd].rooms.Count);
-    //    //rnd2 = 0;
-    //    int rnd3 = Random.Range(0, layoutManager.FDI[rnd].rooms[rnd2].seats.Count);
-
-    //    if (waitForDestination && agentComp.remainingDistance > 0.5)
-    //        return;
-    //    agentComp.SetDestination(layoutManager.FDI[rnd].rooms[rnd2].seats[rnd3].position);
-    //    //Debug.Log(FDI[rnd].rooms[rnd2].seats[rnd3].position.ToString());
-    //}
 }

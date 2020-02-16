@@ -16,7 +16,7 @@ MonoBehaviour:
   classes:
   - roomName: Aula2
     day: 0
-    startHour: 11
+    startHour: 12
     startMinute: 0
     durationHours: 0
     durationMinutes: 50

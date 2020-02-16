@@ -13,8 +13,8 @@ public class Agent : MonoBehaviour
     private Seat targetSeat = null;
     private Room targetRoom = null;
     private string simulation = "Regular";
-    private bool moving = false, started = false;
-    private int remainingSubjects = 0;
+    private bool moving = false;
+    public int remainingSubjects = 0;
 
     void Awake()
     {
@@ -36,6 +36,23 @@ public class Agent : MonoBehaviour
                     state = agentState.relax;
             }
         }
+        else
+        {
+            if(remainingSubjects <= 0)
+            {
+                if(state == agentState.relax)
+                {
+                    state = agentState.other;
+                    navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
+                    moving = true;
+                }
+                else if(state == agentState.other)
+                {
+                    endDay();
+                }
+                
+            }
+        }
 
     }
 
@@ -43,9 +60,10 @@ public class Agent : MonoBehaviour
     {
         if (!subjects.ContainsKey(n) || simulation != "Regular")
             return;
-        if (!started)
+        if (state == agentState.inactive)
         {
-            started = true;
+            gameObject.SetActive(true);
+            state = agentState.enter;
             gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
         }
         switch (subState)
@@ -81,9 +99,18 @@ public class Agent : MonoBehaviour
             case subjectState.end:
                 if(currentSubject == n)
                 {
+                    remainingSubjects--;
+                    Room r = targetRoom;
                     resetTarget();
                     state = agentState.exit;
-                    navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
+                    targetSeat = r.floor.getClosestSeat(transform.position);
+                    if (targetSeat == null)
+                        navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
+                    else
+                    {
+                        navAgent.SetDestination(targetSeat.position);
+                        targetSeat.occupied = true;
+                    }
                     moving = true;
                 }
                 break;
@@ -105,5 +132,23 @@ public class Agent : MonoBehaviour
             targetSeat.occupied = false;
         targetSeat = null;
         currentSubject = "None";
+    }
+
+    private void endDay()
+    {
+        gameObject.SetActive(false);
+        state = agentState.inactive;
+    }
+
+    public void startDay()
+    {
+        resetTarget();
+        endDay();
+        remainingSubjects = 0;
+    }
+
+    public void addSubjectCount()
+    {
+        remainingSubjects++;
     }
 }

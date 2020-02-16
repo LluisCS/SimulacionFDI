@@ -9,7 +9,6 @@ public class LayoutManager : MonoBehaviour
     public List<Floor> FDI;
     public bool logs = false;
     
-    // Start is called before the first frame update
     void Awake()
     {
         if (logs) Debug.Log("Start logic layout");
@@ -20,14 +19,24 @@ public class LayoutManager : MonoBehaviour
             if (logs) Debug.Log("Adding floor");
             foreach (Transform room in floor.transform)
             {
-                Room tmpRoom = new Room(room.name, room.transform.position);
-                if (logs) Debug.Log("Adding room");
-                foreach (Transform seat in room.transform)
+                if(room.name == "Hall")
                 {
-                    Seat tmpSeat = new Seat(seat.transform.position);
-                    tmpRoom.seats.Add(tmpSeat);
+                    foreach (Transform seat in room.transform)
+                    {
+                        Seat tmpSeat = new Seat(seat.transform.position);
+                        tmpFloor.hall.Add(tmpSeat);
+                    }
                 }
-                tmpFloor.rooms.Add(tmpRoom);
+                else { 
+                    Room tmpRoom = new Room(room.name, room.transform.position, tmpFloor);
+                    if (logs) Debug.Log("Adding room");
+                    foreach (Transform seat in room.transform)
+                    {
+                        Seat tmpSeat = new Seat(seat.transform.position);
+                        tmpRoom.seats.Add(tmpSeat);
+                    }
+                    tmpFloor.rooms.Add(tmpRoom);
+                }
             }
             FDI.Add(tmpFloor);
         }
@@ -45,16 +54,16 @@ public class LayoutManager : MonoBehaviour
         return null;
     }
 
-    public Floor getRoomFloor(string name)
-    {
-        foreach (Floor floor in FDI)
-            foreach (Room room in floor.rooms)
-                if (room.name == name)
-                    return floor;
+    //public Floor getRoomFloor(string name)
+    //{
+    //    foreach (Floor floor in FDI)
+    //        foreach (Room room in floor.rooms)
+    //            if (room.name == name)
+    //                return floor;
 
-        Debug.LogWarning("Floor of room with name " + name + " not found.");
-        return null;
-    }
+    //    Debug.LogWarning("Floor of room with name " + name + " not found.");
+    //    return null;
+    //}
 
     public Vector3 getRandomEntrance()
     {
