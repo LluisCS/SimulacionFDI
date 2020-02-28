@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
 public enum weekDay { Monday, Tuesday, Wednesday, Thursday, Friday }
-[System.Serializable]
-public enum personality { }
 public enum subjectState { start, active, end, inactive }
 public enum operation { add, remove, nothing }
 
@@ -13,18 +11,23 @@ public class SubjectInfo
     public subjectState state;
     public List<Agent> teachers;
     public List<Agent> students;
-    public SubjectInfo()
+    public List<Subject> hours;
+    public string name;
+
+    public SubjectInfo(string n)
     {
         teachers = new List<Agent>(0);
         students = new List<Agent>(0);
+        hours = new List<Subject>(0);
         state = subjectState.inactive;
+        name = n;
     }
 }
 
 [System.Serializable]
-public struct classHour
+public struct activity
 {
-    public string roomName;
+    public string roomName, name;
     public weekDay day;
 
     [Range(7, 20)]

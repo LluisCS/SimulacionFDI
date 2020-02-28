@@ -1,7 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public enum agentState { inactive, enter, work, exit, relax, other}
+public enum agentAction { inactive, enter, work, exit, relax}
+public enum agentType { student, teacher, other }
+public enum simulation { regular, fire, special}
+public enum personality { standard, late, early, chaotic }
+
+public struct agentState
+{
+    public bool moving, pendingActivity;
+    public agentAction action;
+    public agentType type;
+    public simulation sim;
+    public personality per;
+}
+
 [RequireComponent(typeof(NavMeshAgent))]
 public class Agent : MonoBehaviour
 {
@@ -12,41 +25,48 @@ public class Agent : MonoBehaviour
     public agentState state;
     private Seat targetSeat = null;
     private Room targetRoom = null;
-    private string simulation = "Regular";
-    private bool moving = false;
-    public int remainingSubjects = 0;
+    private int remainingSubjects = 0, activityIndex = -1;
+    public List<activity> activities;
 
     void Awake()
     {
-        state = agentState.inactive;
+        state.moving = false;
+        state.pendingActivity = false;
+        state.sim = simulation.regular;
+        state.type = agentType.student;
+        state.action = agentAction.inactive;
+        state.per = personality.standard;
+
         subjects = new Dictionary<string, SubjectInfo>(0);
+        activities = new List<activity>(0);
         navAgent = GetComponent<NavMeshAgent>();
     }
 
     void Update()
     {
-        if (moving)
+        activityUpdate();
+        //check destination reached
+        if (state.moving)
         {
             if (!navAgent.pathPending && navAgent.remainingDistance <= navAgent.stoppingDistance)
             {
-                moving = false;
-                if (state == agentState.enter)
-                    state = agentState.work;
-                else if (state == agentState.exit)
-                    state = agentState.relax;
+                state.moving = false;
+                if (state.action == agentAction.enter)
+                    state.action = agentAction.work;
+                else if (state.action == agentAction.exit)
+                    state.action = agentAction.relax;
             }
         }
         else
         {
-            if(remainingSubjects <= 0)
+            if(remainingSubjects <= 0 && !state.pendingActivity)
             {
-                if(state == agentState.relax)
+                if(state.action == agentAction.relax)
                 {
-                    state = agentState.other;
-                    navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
-                    moving = true;
+                    state.action = agentAction.inactive;
+                    moveToRandomExit();
                 }
-                else if(state == agentState.other)
+                else if(state.action == agentAction.inactive)
                 {
                     endDay();
                 }
@@ -58,60 +78,61 @@ public class Agent : MonoBehaviour
 
     public void subjectUpdate(string n, subjectState subState, Room room)
     {
-        if (!subjects.ContainsKey(n) || simulation != "Regular")
+        if (!subjects.ContainsKey(n) || state.sim != simulation.regular)
             return;
-        if (state == agentState.inactive)
+        if (state.action == agentAction.inactive)
         {
             gameObject.SetActive(true);
-            state = agentState.enter;
+            state.action = agentAction.enter;
             gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
         }
         switch (subState)
         {
-            case subjectState.active:
-                if(currentSubject != n  || state != agentState.work)
+            case subjectState.start:
+                if (state.action != agentAction.work)
                 {
                     resetTarget();
                     currentSubject = n;
                     targetRoom = room;
-                    targetSeat = room.getFirstFreeSeat();
+                    if (state.type == agentType.teacher)
+                        targetSeat = room.getTeacherSeat();
+                    else
+                        targetSeat = room.getFirstFreeSeat();
                     targetSeat.occupied = true;
-                    navAgent.SetDestination(targetSeat.position);
-                    state = agentState.enter;
-                    moving = true;
+                    state.action = agentAction.enter;
+                    Invoke("moveToDestination", getDelay());
                 }
                 break;
-            case subjectState.start:
-                if(state != agentState.work )
+            case subjectState.active:
+                if(currentSubject != n  || state.action != agentAction.work)
                 {
-                    //Debug.Log(name + " started " + n);
                     resetTarget();
                     currentSubject = n;
                     targetRoom = room;
-                    targetSeat = room.getFirstFreeSeat();
+                    if (state.type == agentType.teacher)
+                        targetSeat = room.getTeacherSeat();
+                    else
+                        targetSeat = room.getFirstFreeSeat();
                     targetSeat.occupied = true;
-                    navAgent.SetDestination(targetSeat.position);
-                    state = agentState.enter;
-                    moving = true;
-                }    
+                    state.action = agentAction.enter;
+                    Invoke("moveToDestination", getDelay());
+                }
                 break;
-            
             case subjectState.end:
                 if(currentSubject == n)
                 {
                     remainingSubjects--;
                     Room r = targetRoom;
                     resetTarget();
-                    state = agentState.exit;
+                    state.action = agentAction.exit;
                     targetSeat = r.floor.getClosestSeat(transform.position);
                     if (targetSeat == null)
-                        navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
+                        moveToRandomExit();
                     else
                     {
-                        navAgent.SetDestination(targetSeat.position);
                         targetSeat.occupied = true;
+                        Invoke("moveToDestination", getDelay());
                     }
-                    moving = true;
                 }
                 break;
             case subjectState.inactive:
@@ -125,6 +146,54 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private void activityUpdate() {
+        if (!state.pendingActivity)
+            return;
+        if(activityIndex != -1)
+        {
+            activity a = activities[activityIndex];
+            if (state.action == agentAction.work && DayTime.Instance().activityEnded(a))
+            {
+                Room r = targetRoom;
+                resetTarget();
+                state.action = agentAction.exit;
+                targetSeat = r.floor.getClosestSeat(transform.position);
+                if (targetSeat == null)
+                    moveToRandomExit();
+                else
+                {
+                    targetSeat.occupied = true;
+                    Invoke("moveToDestination", getDelay());
+                }
+            }
+        }
+        else if(activityIndex == -1 && currentSubject == "None")
+        {
+            state.pendingActivity = false;
+            foreach (activity a in activities)
+            {
+                if (!DayTime.Instance().activityEnded(a))
+                { 
+                    state.pendingActivity = true;
+                    if (DayTime.Instance().activityStarted(a))
+                    {
+                        resetTarget();
+                        activityIndex = activities.IndexOf(a);
+                        targetRoom = SimulationManager.Instance().GetRoom(a.roomName);
+                        if (state.type == agentType.teacher)
+                            targetSeat = targetRoom.getTeacherSeat();
+                        else
+                            targetSeat = targetRoom.getFirstFreeSeat();
+                        targetSeat.occupied = true;
+                        state.action = agentAction.enter;
+                        Invoke("moveToDestination", getDelay());
+                    }
+                }
+            }
+        }
+    }
+
+
     private void resetTarget()
     {
         targetRoom = null;
@@ -132,12 +201,13 @@ public class Agent : MonoBehaviour
             targetSeat.occupied = false;
         targetSeat = null;
         currentSubject = "None";
+        activityIndex = -1;
     }
 
     private void endDay()
     {
         gameObject.SetActive(false);
-        state = agentState.inactive;
+        state.action = agentAction.inactive;
     }
 
     public void startDay()
@@ -145,10 +215,48 @@ public class Agent : MonoBehaviour
         resetTarget();
         endDay();
         remainingSubjects = 0;
+        weekDay day = DayTime.Instance().WeekDay();
+        state.pendingActivity = activities.Count > 0;
     }
 
     public void addSubjectCount()
     {
         remainingSubjects++;
+    }
+
+    private void moveToDestination() {
+        navAgent.SetDestination(targetSeat.position);
+        state.moving = true;
+    }
+
+    private void moveToRandomExit()
+    {
+        navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
+        state.moving = true;
+    }
+
+    private float getDelay()
+    {
+        float delay = 0.0f;
+        float ran = 0;
+        switch (state.per)
+        {
+            case personality.standard:
+                ran = Random.Range(1, 3);
+                break;
+            case personality.late:
+                ran = Random.Range(3, 6);
+                break;
+            case personality.early:
+                ran = Random.Range(0, 2);
+                break;
+            case personality.chaotic:
+                ran = Random.Range(0, 6);
+                break;
+            default:
+                break;
+        }
+        delay += ran;
+        return delay;
     }
 }

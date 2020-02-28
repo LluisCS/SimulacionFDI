@@ -69,4 +69,14 @@ public class DayTime : MonoBehaviour
     {
         return day;
     }
+
+    public bool activityEnded( activity a)
+    {
+        return hours * 60 + minutes > (a.startHour + a.durationHours) * 60 + a.startMinute + a.durationMinutes;
+    }
+
+    public bool activityStarted( activity a)
+    {
+        return hours * 60 + minutes > a.startHour * 60 + a.startMinute;
+    }
 }

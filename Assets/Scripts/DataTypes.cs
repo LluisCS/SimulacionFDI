@@ -5,7 +5,7 @@ public class SubjectData : ScriptableObject
 {
     public new string name;
 
-    public classHour[] classes;
+    public activity[] classes;
 }
 
 [CreateAssetMenu]
@@ -13,6 +13,7 @@ public class StudentData : ScriptableObject
 {
     public new string name;
     public string[] classNames;
+    public activity[] facultyActivities;
 }
 
 [CreateAssetMenu]
@@ -20,5 +21,6 @@ public class TeacherData : ScriptableObject
 {
     public new string name;
     public string[] classNames;
+    public activity[] facultyActivities;
 }
 

@@ -49,14 +49,14 @@ public class SimulationManager : MonoBehaviour
             operation op = s.update(hour, minute);
             if (op == operation.add)
             {
-                schedule.activeSubjects.Add(s.name);
+                schedule.activeSubjects.Add(s.info.name);
                 s.room.occupied = true;
-                if (logs) Debug.Log(s.name + " has started.");
+                if (logs) Debug.Log(s.info.name + " has started.");
             }
             else if(op== operation.remove)
             {
-                if (logs) Debug.Log(s.name + " has ended.");
-                schedule.activeSubjects.Remove(s.name);
+                if (logs) Debug.Log(s.info.name + " has ended.");
+                schedule.activeSubjects.Remove(s.info.name);
                 s.room.occupied = false;
             }
         }
@@ -69,6 +69,11 @@ public class SimulationManager : MonoBehaviour
             Agent ag = student.GetComponent<Agent>();
             ag.startDay();
         }
+        foreach (Transform teacher in dataManager.teacherParent.transform)
+        {
+            Agent ag = teacher.GetComponent<Agent>();
+            ag.startDay();
+        }
         schedule.activeSubjects.Clear();
         foreach (Subject s in schedule.days[(int)day])
         {
@@ -76,11 +81,20 @@ public class SimulationManager : MonoBehaviour
             {
                 student.addSubjectCount();
             }
+            foreach (var teacher in s.info.teachers)
+            {
+                teacher.addSubjectCount();
+            }
         }
     }
 
     public Vector3 getRandomEntrance()
     {
         return layoutManager.getRandomEntrance();
+    }
+
+    public Room GetRoom(string name)
+    {
+        return layoutManager.getRoom(name);
     }
 }

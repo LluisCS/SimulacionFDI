@@ -25,11 +25,12 @@ public class DataManager : MonoBehaviour
 
         foreach (var sub in subjectsData)
         {
-            SubjectInfo info = new SubjectInfo();
+            SubjectInfo info = new SubjectInfo(sub.name);
             foreach (var hour in sub.classes)
             {
-                Subject s = new Subject( hour.startHour, hour.startMinute, hour.durationHours, hour.durationMinutes,sub.name, LManager.getRoom(hour.roomName),info);
+                Subject s = new Subject( hour.startHour, hour.startMinute, hour.durationHours, hour.durationMinutes, LManager.getRoom(hour.roomName),info);
                 schedule.days[(int)hour.day].Add(s);
+                info.hours.Add(s);
             }
             schedule.subjectInfos.Add(sub.name, info);
         }
@@ -40,6 +41,8 @@ public class DataManager : MonoBehaviour
             GameObject agentObj = Instantiate(agentPrefab);
             agentObj.transform.SetParent(teacherParent.transform);
             Agent agentComp = agentObj.GetComponent<Agent>();
+            agentComp.state.type = agentType.teacher;
+            agentComp.name = teacher.name;
             if (agentComp == null)
                 Debug.LogError("Agent prefab missing agent component.");
             else
@@ -48,7 +51,16 @@ public class DataManager : MonoBehaviour
                 {
                     SubjectInfo tmp;
                     if (schedule.subjectInfos.TryGetValue(s, out tmp))
+                    {
                         tmp.teachers.Add(agentComp);
+                        agentComp.subjects.Add(s, tmp);
+                    }
+                    else
+                        Debug.LogWarning("Subject with name " + s + " not found.");
+            }
+                foreach (var a in teacher.facultyActivities)
+                {
+                    agentComp.activities.Add(a);
                 }
             }
         }
@@ -73,6 +85,10 @@ public class DataManager : MonoBehaviour
                     }
                     else
                         Debug.LogWarning("Subject with name " + s + " not found.");
+                }
+                foreach (var a in student.facultyActivities)
+                {
+                    agentComp.activities.Add(a);
                 }
             }
         }

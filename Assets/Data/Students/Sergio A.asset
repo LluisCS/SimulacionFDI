@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Diego Mateos
+  m_Name: Sergio A
   m_EditorClassIdentifier: Assembly-CSharp::StudentData
-  name: Diego Mateos
+  name: Sergio A
   classNames:
-  - FP
+  - FC
+  facultyActivities: []

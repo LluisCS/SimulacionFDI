@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Daniel Mozos
-  m_EditorClassIdentifier: Assembly-CSharp::Teacher
-  name: Daniel Mozos
-  classNames:
-  - FC
+  m_Name: Jaime S
+  m_EditorClassIdentifier: Assembly-CSharp::TeacherData
+  name: 
+  classNames: []
+  facultyActivities: []

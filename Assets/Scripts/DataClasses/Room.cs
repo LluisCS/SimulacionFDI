@@ -29,5 +29,15 @@ public class Room
         Debug.LogWarning("No empty seat found in room " + name);
         return null;
     }
+    public Seat getTeacherSeat()
+    {
+        foreach (var seat in teacherSeats)
+        {
+            if (!seat.occupied)
+                return seat;
+        }
+        Debug.LogWarning("No empty seat found in room " + name);
+        return null;
+    }
     //public Seat getRandomFreeSeat() { }
 }

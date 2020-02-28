@@ -32,8 +32,19 @@ public class LayoutManager : MonoBehaviour
                     if (logs) Debug.Log("Adding room");
                     foreach (Transform seat in room.transform)
                     {
-                        Seat tmpSeat = new Seat(seat.transform.position);
-                        tmpRoom.seats.Add(tmpSeat);
+                        if (seat.name == "Teacher")
+                        {
+                            foreach (Transform s in seat.transform)
+                            {
+                                Seat tmp = new Seat(s.transform.position);
+                                tmpRoom.teacherSeats.Add(tmp);
+                            }
+                        }
+                        else
+                        {
+                            Seat tmpSeat = new Seat(seat.transform.position);
+                            tmpRoom.seats.Add(tmpSeat);
+                        }
                     }
                     tmpFloor.rooms.Add(tmpRoom);
                 }
