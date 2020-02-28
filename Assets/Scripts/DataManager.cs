@@ -43,6 +43,7 @@ public class DataManager : MonoBehaviour
             Agent agentComp = agentObj.GetComponent<Agent>();
             agentComp.state.type = agentType.teacher;
             agentComp.name = teacher.name;
+            agentComp.state.per = teacher.per;
             if (agentComp == null)
                 Debug.LogError("Agent prefab missing agent component.");
             else
@@ -70,6 +71,7 @@ public class DataManager : MonoBehaviour
             GameObject agentObj = Instantiate(agentPrefab);
             agentObj.transform.SetParent(studentParent.transform);
             Agent agentComp = agentObj.GetComponent<Agent>();
+            agentComp.state.per = student.per;
             agentComp.name = student.name;
             if (agentComp == null)
                 Debug.LogError("Agent prefab missing agent component.");

@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public enum agentAction { inactive, enter, work, exit, relax}
 public enum agentType { student, teacher, other }
 public enum simulation { regular, fire, special}
+[System.Serializable]
 public enum personality { standard, late, early, chaotic }
 
 public struct agentState

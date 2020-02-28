@@ -15,11 +15,5 @@ MonoBehaviour:
   name: Diego M
   classNames:
   - FP
-  facultyActivities:
-  - roomName: 
-    name: 
-    day: 0
-    startHour: 0
-    startMinute: 0
-    durationHours: 0
-    durationMinutes: 0
+  facultyActivities: []
+  per: 0
