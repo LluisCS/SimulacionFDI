@@ -38,7 +38,6 @@ public class DayTime : MonoBehaviour
         {
             minutes -= 60;
             hours++;
-            if (!logs) Debug.Log(hours);
         }
         if (hours > 23)
         {

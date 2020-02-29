@@ -17,6 +17,7 @@ public class SimulationManager : MonoBehaviour
     public SubjectSchedule schedule;
     public bool logs = false;
     private weekDay day = weekDay.Monday;
+    public SubjectUI UI;
 
     void Start()
     {
@@ -49,15 +50,17 @@ public class SimulationManager : MonoBehaviour
             operation op = s.update(hour, minute);
             if (op == operation.add)
             {
-                schedule.activeSubjects.Add(s.info.name);
-                s.room.occupied = true;
                 if (logs) Debug.Log(s.info.name + " has started.");
+                schedule.activeSubjects.Add(s);
+                s.room.occupied = true;
+                UI.updateUI(schedule.activeSubjects);
             }
             else if(op== operation.remove)
             {
                 if (logs) Debug.Log(s.info.name + " has ended.");
-                schedule.activeSubjects.Remove(s.info.name);
+                schedule.activeSubjects.Remove(s);
                 s.room.occupied = false;
+                UI.updateUI(schedule.activeSubjects);
             }
         }
     }
@@ -97,4 +100,5 @@ public class SimulationManager : MonoBehaviour
     {
         return layoutManager.getRoom(name);
     }
+
 }

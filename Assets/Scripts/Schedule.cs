@@ -43,7 +43,7 @@ public struct activity
 public class SubjectSchedule
 {
     public List<Subject>[] days;
-    public List<string> activeSubjects;
+    public List<Subject> activeSubjects;
     public Dictionary<string, SubjectInfo> subjectInfos;
     public SubjectSchedule()
     {
@@ -52,7 +52,7 @@ public class SubjectSchedule
         {
             days[i] = new List<Subject>(0);
         }
-        activeSubjects = new List<string>(0);
+        activeSubjects = new List<Subject>(0);
         subjectInfos = new Dictionary<string, SubjectInfo>(0);
     }
 }
