@@ -10,25 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Jaime S
-  m_EditorClassIdentifier: Assembly-CSharp::TeacherData
-  name: Jaime S
-  classNames:
-  - SON
-  - FP
-  facultyActivities:
-  - roomName: Despacho325
+  m_Name: IA
+  m_EditorClassIdentifier: Assembly-CSharp::SubjectData
+  name: IA
+  classes:
+  - roomName: Aula5
+    name: 
+    day: 1
+    startHour: 12
+    startMinute: 0
+    durationHours: 0
+    durationMinutes: 50
+  - roomName: Aula5
     name: 
     day: 2
-    startHour: 11
+    startHour: 12
     startMinute: 0
-    durationHours: 2
-    durationMinutes: 0
-  - roomName: Despacho325
+    durationHours: 0
+    durationMinutes: 50
+  - roomName: Lab1
     name: 
     day: 4
     startHour: 11
     startMinute: 0
-    durationHours: 2
-    durationMinutes: 0
-  per: 0
+    durationHours: 1
+    durationMinutes: 40

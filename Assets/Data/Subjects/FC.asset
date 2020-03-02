@@ -15,24 +15,28 @@ MonoBehaviour:
   name: FC
   classes:
   - roomName: Aula2
+    name: 
     day: 0
-    startHour: 12
+    startHour: 11
     startMinute: 0
     durationHours: 0
     durationMinutes: 50
   - roomName: Aula2
+    name: 
     day: 1
     startHour: 11
     startMinute: 0
     durationHours: 0
     durationMinutes: 50
   - roomName: Aula2
+    name: 
     day: 2
     startHour: 11
     startMinute: 0
     durationHours: 0
     durationMinutes: 50
   - roomName: Aula2
+    name: 
     day: 3
     startHour: 11
     startMinute: 0

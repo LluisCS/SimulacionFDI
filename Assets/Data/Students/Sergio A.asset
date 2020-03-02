@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StudentData
   name: Sergio A
   classNames:
-  - FC
+  - IA
+  - SON
   facultyActivities: []
+  per: 0

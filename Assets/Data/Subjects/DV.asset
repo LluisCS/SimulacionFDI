@@ -20,11 +20,11 @@ MonoBehaviour:
     startHour: 9
     startMinute: 30
     durationHours: 1
-    durationMinutes: 0
+    durationMinutes: 30
   - roomName: Aula4
     name: 
     day: 1
     startHour: 9
     startMinute: 30
     durationHours: 1
-    durationMinutes: 0
+    durationMinutes: 30

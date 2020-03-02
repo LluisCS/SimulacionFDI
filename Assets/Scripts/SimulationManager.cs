@@ -18,6 +18,7 @@ public class SimulationManager : MonoBehaviour
     public bool logs = false;
     private weekDay day = weekDay.Monday;
     public SubjectUI UI;
+    public float initialAgentSpeed = 2.0f; 
 
     void Start()
     {

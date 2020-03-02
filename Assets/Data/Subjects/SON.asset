@@ -10,14 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: MUS
+  m_Name: SON
   m_EditorClassIdentifier: Assembly-CSharp::SubjectData
-  name: MUS
+  name: SON
   classes:
   - roomName: Aula3
     name: 
-    day: 0
-    startHour: 9
+    day: 2
+    startHour: 16
     startMinute: 0
-    durationHours: 2
-    durationMinutes: 0
+    durationHours: 1
+    durationMinutes: 40
+  - roomName: Aula3
+    name: 
+    day: 4
+    startHour: 16
+    startMinute: 0
+    durationHours: 1
+    durationMinutes: 40

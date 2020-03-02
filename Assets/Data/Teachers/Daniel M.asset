@@ -12,6 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Daniel M
   m_EditorClassIdentifier: Assembly-CSharp::TeacherData
-  name: 
-  classNames: []
-  facultyActivities: []
+  name: Daniel M
+  classNames:
+  - FC
+  facultyActivities:
+  - roomName: Despacho301
+    name: 
+    day: 1
+    startHour: 10
+    startMinute: 0
+    durationHours: 2
+    durationMinutes: 0
+  - roomName: Despacho301
+    name: 
+    day: 3
+    startHour: 10
+    startMinute: 0
+    durationHours: 2
+    durationMinutes: 0
+  per: 0
