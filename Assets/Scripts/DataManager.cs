@@ -10,15 +10,6 @@ public class DataManager : MonoBehaviour
     public SubjectData[] subjectsData;
     public TeacherData[] teachersData;
     public StudentData[] studentsData;
-    void Awake()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 
     public SubjectSchedule generateSchedule(LayoutManager LManager) {
         SubjectSchedule schedule = new SubjectSchedule();

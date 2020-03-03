@@ -4594,7 +4594,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.8, y: 0}
+  m_AnchoredPosition: {x: -11.28, y: 1.04}
   m_SizeDelta: {x: 34.8, y: 32.93}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &171036436
@@ -4639,7 +4639,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 171036437}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1473428257}
+        m_MethodName: changeSpeed
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &171036437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11642,8 +11653,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 50.699997, y: -0.0000019073486}
-  m_SizeDelta: {x: -176.92, y: -4.44}
+  m_AnchoredPosition: {x: 43.1, y: -0.0000019073486}
+  m_SizeDelta: {x: -155.96, y: -4.44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &481875648
 MonoBehaviour:
@@ -11676,7 +11687,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'x 20
+  m_Text: 'x 20.0
 
 '
 --- !u!222 &481875649
@@ -12434,7 +12445,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 506292624}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.499, y: 0.25999996, z: -1.013}
+  m_LocalPosition: {x: 4.413, y: 0.25999996, z: -1.145}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1731860282}
@@ -13572,7 +13583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550830308}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.767, y: 0.26, z: -1.013}
+  m_LocalPosition: {x: 1.486, y: 0.26, z: -0.443}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1731860282}
@@ -33649,7 +33660,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409365901}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.202, y: 0.25999996, z: -1.013}
+  m_LocalPosition: {x: 3.154, y: 0.25999996, z: -0.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1731860282}
@@ -35376,7 +35387,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeSpeed: 60
-  simulationSpeed: 1
   initialHour: 8
   logs: 0
 --- !u!114 &1473428256
@@ -35422,8 +35432,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logs: 1
-  UI: {fileID: 1419358594}
-  initialAgentSpeed: 2
+  subjectUI: {fileID: 1419358594}
+  speedText: {fileID: 481875648}
+  initialAgentSpeed: 4
+  initialTimeSpeed: 60
+  speedInrement: 0.5
+  maxSpeed: 7
+  minSpeed: 0.5
 --- !u!1 &1477700256
 GameObject:
   m_ObjectHideFlags: 0
@@ -40875,7 +40890,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1731860281}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.311, y: 0, z: -0.591}
+  m_LocalPosition: {x: 0.431, y: 0, z: -0.591}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 550830309}
@@ -71256,7 +71271,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1798409987}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1473428257}
+        m_MethodName: changeSpeed
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1798409987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78961,7 +78987,7 @@ PrefabInstance:
     - target: {fileID: 5243446517273713084, guid: 0f549a1341a1c5342abaf25952788eab,
         type: 3}
       propertyPath: m_AngularSpeed
-      value: 100
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 5243446517273713084, guid: 0f549a1341a1c5342abaf25952788eab,
         type: 3}

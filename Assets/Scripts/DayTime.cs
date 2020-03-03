@@ -14,7 +14,6 @@ public class DayTime : MonoBehaviour
     private double seconds = 0;
     private weekDay day = weekDay.Monday;
     public double timeSpeed = 1.0f;
-    public double simulationSpeed = 1.0f;
     public int initialHour = 7;
     public bool logs = false;
 
@@ -67,6 +66,11 @@ public class DayTime : MonoBehaviour
     public weekDay WeekDay()
     {
         return day;
+    }
+
+    public void setTimeSpeed(double tSpeed)
+    {
+        timeSpeed = tSpeed;
     }
 
     public bool activityEnded( activity a)

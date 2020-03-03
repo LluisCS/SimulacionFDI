@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(DataManager))] [RequireComponent(typeof(LayoutManager))]
 public class SimulationManager : MonoBehaviour
@@ -17,8 +18,11 @@ public class SimulationManager : MonoBehaviour
     public SubjectSchedule schedule;
     public bool logs = false;
     private weekDay day = weekDay.Monday;
-    public SubjectUI UI;
-    public float initialAgentSpeed = 2.0f; 
+    public SubjectUI subjectUI;
+    public Text speedText;
+    public float initialAgentSpeed = 2.0f, initialTimeSpeed = 60.0f;
+    public float speedInrement = 0.5f, maxSpeed = 10.0f, minSpeed = 0.5f;
+    private float speedMultiplier = 1.0f;
 
     void Start()
     {
@@ -31,6 +35,7 @@ public class SimulationManager : MonoBehaviour
         schedule = dataManager.generateSchedule(layoutManager);
 
         startDay(DayTime.Instance().WeekDay());
+        updateSpeed();
     }
 
     
@@ -54,14 +59,14 @@ public class SimulationManager : MonoBehaviour
                 if (logs) Debug.Log(s.info.name + " has started.");
                 schedule.activeSubjects.Add(s);
                 s.room.occupied = true;
-                UI.updateUI(schedule.activeSubjects);
+                subjectUI.updateUI(schedule.activeSubjects);
             }
             else if(op== operation.remove)
             {
                 if (logs) Debug.Log(s.info.name + " has ended.");
                 schedule.activeSubjects.Remove(s);
                 s.room.occupied = false;
-                UI.updateUI(schedule.activeSubjects);
+                subjectUI.updateUI(schedule.activeSubjects);
             }
         }
     }
@@ -102,4 +107,33 @@ public class SimulationManager : MonoBehaviour
         return layoutManager.getRoom(name);
     }
 
+    public void changeSpeed(bool decrease)
+    {
+        if (decrease)
+        {
+            if (speedMultiplier - speedInrement < minSpeed)
+                speedMultiplier = minSpeed;
+            else
+                speedMultiplier -= speedInrement;
+        }
+        else
+        {
+            if (speedMultiplier + speedInrement > maxSpeed)
+                speedMultiplier = maxSpeed;
+            else
+                speedMultiplier += speedInrement;
+        }
+        updateSpeed();
+    }
+
+    private void updateSpeed()
+    {
+        DayTime.Instance().setTimeSpeed(initialTimeSpeed * speedMultiplier);
+
+        foreach (NavMeshAgent ag in dataManager.studentParent.GetComponentsInChildren<NavMeshAgent>())
+            ag.speed = speedMultiplier * initialAgentSpeed;
+        foreach (NavMeshAgent ag in dataManager.teacherParent.GetComponentsInChildren<NavMeshAgent>())
+            ag.speed = speedMultiplier * initialAgentSpeed;
+        speedText.text = "x " + speedMultiplier.ToString("F1");
+    }
 }
