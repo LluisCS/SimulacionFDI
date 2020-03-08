@@ -16,6 +16,7 @@ public class DayTime : MonoBehaviour
     public double timeSpeed = 1.0f;
     public int initialHour = 7;
     public bool logs = false;
+    private bool pause = false;
 
     void Awake()
     {
@@ -28,6 +29,7 @@ public class DayTime : MonoBehaviour
 
     void Update()
     {
+        if (pause) return;
         seconds += Time.deltaTime * timeSpeed;
         while(seconds >= 60){
             minutes++;
@@ -81,5 +83,15 @@ public class DayTime : MonoBehaviour
     public bool activityStarted( activity a)
     {
         return hours * 60 + minutes > a.startHour * 60 + a.startMinute;
+    }
+
+    public double getTimeSpeed()
+    {
+        return timeSpeed;
+    }
+
+    public void togglePause()
+    {
+        pause = !pause;
     }
 }

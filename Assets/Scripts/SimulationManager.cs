@@ -23,6 +23,7 @@ public class SimulationManager : MonoBehaviour
     public float initialAgentSpeed = 2.0f, initialTimeSpeed = 60.0f;
     public float speedInrement = 0.5f, maxSpeed = 10.0f, minSpeed = 0.5f;
     private float speedMultiplier = 1.0f;
+    private bool pause = false;
 
     void Start()
     {
@@ -135,5 +136,15 @@ public class SimulationManager : MonoBehaviour
         foreach (NavMeshAgent ag in dataManager.teacherParent.GetComponentsInChildren<NavMeshAgent>())
             ag.speed = speedMultiplier * initialAgentSpeed;
         speedText.text = "x " + speedMultiplier.ToString("F1");
+    }
+
+    public void togglePause()
+    {
+        pause = !pause;
+        foreach (Agent ag in dataManager.studentParent.GetComponentsInChildren<Agent>())
+            ag.togglePause();
+        foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
+            ag.togglePause();
+
     }
 }

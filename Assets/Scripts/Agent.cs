@@ -28,6 +28,7 @@ public class Agent : MonoBehaviour
     private Room targetRoom = null;
     private int remainingSubjects = 0, activityIndex = -1;
     public List<activity> activities;
+    private bool pause = false;
 
     void Awake()
     {
@@ -45,6 +46,7 @@ public class Agent : MonoBehaviour
 
     void Update()
     {
+        if (pause) return;
         activityUpdate();
         //check destination reached
         if (state.moving)
@@ -258,6 +260,13 @@ public class Agent : MonoBehaviour
                 break;
         }
         delay += ran;
+        delay = (delay * 60) / (float)DayTime.Instance().getTimeSpeed();
         return delay;
+    }
+    public void togglePause()
+    {
+        pause = !pause;
+        navAgent.isStopped = pause;
+       
     }
 }
