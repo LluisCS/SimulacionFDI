@@ -7,8 +7,10 @@ public class Subject
     public uint startHour, startMinute, endHour, endMinute;
     public SubjectInfo info;
     public Room room;
-    public Subject(uint sHour, uint sMinute, uint dHour, uint dMinute, Room r, SubjectInfo inf)
+    public weekDay day;
+    public Subject(weekDay d, uint sHour, uint sMinute, uint dHour, uint dMinute, Room r, SubjectInfo inf)
     {
+        day = d;
         startHour = sHour;
         startMinute = sMinute;
         endHour = sHour + dHour;

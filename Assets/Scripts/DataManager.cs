@@ -19,7 +19,7 @@ public class DataManager : MonoBehaviour
             SubjectInfo info = new SubjectInfo(sub.name);
             foreach (var hour in sub.classes)
             {
-                Subject s = new Subject( hour.startHour, hour.startMinute, hour.durationHours, hour.durationMinutes, LManager.getRoom(hour.roomName),info);
+                Subject s = new Subject(hour.day, hour.startHour, hour.startMinute, hour.durationHours, hour.durationMinutes, LManager.getRoom(hour.roomName),info);
                 schedule.days[(int)hour.day].Add(s);
                 info.hours.Add(s);
             }
@@ -54,6 +54,8 @@ public class DataManager : MonoBehaviour
                 {
                     agentComp.activities.Add(a);
                 }
+                if (teacher.autoLunchActivity)
+                    generateLunchActivities(agentComp);
             }
         }
         studentParent = new GameObject("studentParent");
@@ -83,11 +85,69 @@ public class DataManager : MonoBehaviour
                 {
                     agentComp.activities.Add(a);
                 }
+                if (student.autoLunchActivity)
+                    generateLunchActivities(agentComp);
             }
         }
         return schedule;
     }
-
+    
+    private void generateLunchActivities(Agent ag)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            uint morningEnd = 0;
+            uint afternoonStart = 99999999;
+            foreach (var act in ag.activities)
+            {
+                if (i == (int)act.day)
+                {
+                    uint tmp = (act.startHour * 60) + act.startMinute;
+                    if (tmp > 14 * 60 && tmp < afternoonStart)
+                        afternoonStart = tmp;
+                    else
+                    {
+                        tmp += (act.durationHours * 60) + act.durationMinutes;
+                        if (tmp < 13 * 60 && tmp > morningEnd)
+                            morningEnd = tmp;
+                    }
+                }
+            }
+            foreach (var sInfo in ag.subjects)
+            {
+                foreach(Subject s in sInfo.Value.hours)
+                {
+                    if (i == (int)s.day)
+                    {
+                        uint tmp = (s.startHour * 60) + s.startMinute;
+                        if (tmp > 14 * 60 && tmp < afternoonStart)
+                            afternoonStart = tmp;
+                        else
+                        {
+                            tmp = (s.endHour * 60) + s.endMinute;
+                            if (tmp < 13 * 60 && tmp > morningEnd)
+                                morningEnd = tmp;
+                        }
+                    }
+                }
+            }
+            if (morningEnd > 0 && afternoonStart < 9999999)
+            {
+                activity a;
+                a.day = (weekDay)i;
+                a.name = "Lunch";
+                a.roomName = "Cafeteria";
+                a.startHour = 13;
+                a.durationHours = 0;
+                a.durationMinutes = (uint)Random.Range(20, 35);
+                if (afternoonStart > 30 + (14 * 60))
+                    a.startMinute = (uint)Random.Range(29, 59);
+                else
+                    a.startMinute = (uint)Random.Range(5, 35);
+                ag.activities.Add(a);
+            }
+        }
+    }
     void generateRandomStudents() { }
     void generateRandomTeachers() { }
     //void generateRandomSubjects() { }

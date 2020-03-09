@@ -15,6 +15,7 @@ public class StudentData : ScriptableObject
     public string[] classNames;
     public activity[] facultyActivities;
     public personality per;
+    public bool autoLunchActivity = false;
 }
 
 [CreateAssetMenu]
@@ -24,5 +25,6 @@ public class TeacherData : ScriptableObject
     public string[] classNames;
     public activity[] facultyActivities;
     public personality per;
+    public bool autoLunchActivity = false;
 }
 

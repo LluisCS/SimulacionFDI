@@ -35543,6 +35543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeSpeed: 60
   initialHour: 8
+  initialMinute: 45
   logs: 0
 --- !u!114 &1473428256
 MonoBehaviour:
@@ -35574,6 +35575,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6704ff2166d28404da979ea3c1155a8a, type: 2}
   - {fileID: 11400000, guid: e1d6448ac54a1904b89e7abf6f283c5d, type: 2}
   - {fileID: 11400000, guid: 29bf3d781963d894bba967e16f22c8ee, type: 2}
+  - {fileID: 11400000, guid: b8dfb00607708be498bdec16d3fa9624, type: 2}
 --- !u!114 &1473428257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35586,13 +35588,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac57d81c2cc98784ca1caf98f1b2a579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logs: 1
+  logs: 0
   subjectUI: {fileID: 1419358594}
   speedText: {fileID: 481875648}
   initialAgentSpeed: 4
-  initialTimeSpeed: 60
+  initialTimeSpeed: 30
   speedInrement: 0.5
-  maxSpeed: 7
+  maxSpeed: 4
   minSpeed: 0.5
 --- !u!1 &1477700256
 GameObject:

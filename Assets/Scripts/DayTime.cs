@@ -14,7 +14,7 @@ public class DayTime : MonoBehaviour
     private double seconds = 0;
     private weekDay day = weekDay.Monday;
     public double timeSpeed = 1.0f;
-    public int initialHour = 7;
+    public int initialHour = 8, initialMinute = 45;
     public bool logs = false;
     private bool pause = false;
 
@@ -25,6 +25,7 @@ public class DayTime : MonoBehaviour
         else
             Destroy(this);
         hours = initialHour;
+        minutes = initialMinute;
     }
 
     void Update()

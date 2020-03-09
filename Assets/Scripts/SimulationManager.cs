@@ -147,4 +147,9 @@ public class SimulationManager : MonoBehaviour
             ag.togglePause();
 
     }
+
+    public float getAgentSpeed()
+    {
+        return speedMultiplier * initialAgentSpeed;
+    }
 }

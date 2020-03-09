@@ -8,7 +8,7 @@ public class FreeCamera : MonoBehaviour
     
     wasd : basic movement
     shift : Makes camera accelerate
-    space : Moves camera on X and Z axis only.*/
+    */
 
     public string deactiveKey = "e";
     public float mainSpeed = 100.0f; //regular speed
@@ -31,8 +31,6 @@ public class FreeCamera : MonoBehaviour
         }
         if (!active)
             return;
-        //float h = horizontalSpeed * Input.GetAxis("Mouse X");
-        //float v = verticalSpeed * Input.GetAxis("Mouse Y");
         lastMouse = Input.mousePosition - lastMouse;
         lastMouse = new Vector3(-Input.GetAxis("Mouse Y") * camSens, Input.GetAxis("Mouse X") * camSens, 0);
         lastMouse = new Vector3(transform.eulerAngles.x + lastMouse.x, transform.eulerAngles.y + lastMouse.y, 0);
@@ -41,7 +39,6 @@ public class FreeCamera : MonoBehaviour
         //Mouse  camera angle done.  
 
         //Keyboard commands
-        float f = 0.0f;
         Vector3 p = GetBaseInput();
         if (Input.GetKey(KeyCode.LeftShift))
         {

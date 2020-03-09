@@ -88,6 +88,7 @@ public class Agent : MonoBehaviour
             gameObject.SetActive(true);
             state.action = agentAction.enter;
             gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
+            navAgent.speed = SimulationManager.Instance().getAgentSpeed();
         }
         switch (subState)
         {
@@ -189,6 +190,12 @@ public class Agent : MonoBehaviour
                             targetSeat = targetRoom.getFirstFreeSeat();
                         targetSeat.occupied = true;
                         state.action = agentAction.enter;
+                        if (state.action == agentAction.inactive)
+                        {
+                            gameObject.SetActive(true);
+                            gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
+                            navAgent.speed = SimulationManager.Instance().getAgentSpeed();
+                        }
                         Invoke("moveToDestination", getDelay());
                     }
                 }
