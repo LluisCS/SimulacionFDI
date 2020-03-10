@@ -9,22 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: SON
+  m_Script: {fileID: 11500000, guid: ae44bb7687d0a5e46bc311d7eedbdc69, type: 3}
+  m_Name: EDA
   m_EditorClassIdentifier: Assembly-CSharp::SubjectData
-  name: SON
+  name: EDA
   classes:
   - roomName: Aula3
     name: 
-    day: 2
-    startHour: 16
+    day: 0
+    startHour: 10
     startMinute: 0
-    durationHours: 1
-    durationMinutes: 40
+    durationHours: 0
+    durationMinutes: 50
   - roomName: Aula3
     name: 
-    day: 4
-    startHour: 16
+    day: 1
+    startHour: 10
+    startMinute: 0
+    durationHours: 0
+    durationMinutes: 50
+  - roomName: Lab3
+    name: 
+    day: 3
+    startHour: 10
     startMinute: 0
     durationHours: 1
     durationMinutes: 40

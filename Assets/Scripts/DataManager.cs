@@ -7,13 +7,15 @@ public class DataManager : MonoBehaviour
     public GameObject agentPrefab;
     [HideInInspector]
     public GameObject studentParent, teacherParent;
-    public SubjectData[] subjectsData;
-    public TeacherData[] teachersData;
-    public StudentData[] studentsData;
+    private SubjectData[] subjectsData;
+    private TeacherData[] teachersData;
+    private StudentData[] studentsData;
 
     public SubjectSchedule generateSchedule(LayoutManager LManager) {
         SubjectSchedule schedule = new SubjectSchedule();
-
+        subjectsData = (SubjectData[])Resources.FindObjectsOfTypeAll(typeof(SubjectData));
+        teachersData = (TeacherData[])Resources.FindObjectsOfTypeAll(typeof(TeacherData));
+        studentsData = (StudentData[])Resources.FindObjectsOfTypeAll(typeof(StudentData));
         foreach (var sub in subjectsData)
         {
             SubjectInfo info = new SubjectInfo(sub.name);
