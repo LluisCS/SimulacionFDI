@@ -25876,6 +25876,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -25960,11 +25961,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39aeb1889c11e354488e38b841f113f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deactiveKey: e
   mainSpeed: 15
   shiftAdd: 20
   maxShift: 1000
   camSens: 1
+  active: 0
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9a192d3abbaa34cbab295aa59f6008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoothSpeed: 0.125
+  offset: {x: -1, y: 2, z: -1}
 --- !u!1 &963262583
 GameObject:
   m_ObjectHideFlags: 0
@@ -39493,21 +39508,6 @@ MonoBehaviour:
     type: 3}
   studentParent: {fileID: 0}
   teacherParent: {fileID: 0}
-  subjectsData:
-  - {fileID: 11400000, guid: 5b2487b6a4875b44ba8fd06f02056070, type: 2}
-  - {fileID: 11400000, guid: b0ad10aeacea15e43a487709b80f1ef4, type: 2}
-  - {fileID: 11400000, guid: 582e68bca0f65754dbfc854dee46d237, type: 2}
-  - {fileID: 11400000, guid: a592a1873d68613499d86e4407af194b, type: 2}
-  - {fileID: 11400000, guid: b1cf90bc5eee73540a01705932fc410d, type: 2}
-  teachersData:
-  - {fileID: 11400000, guid: c3296466a32542e438d1b92634d40e3e, type: 2}
-  - {fileID: 11400000, guid: d1f10b6971e629b4c86fa1641026bf03, type: 2}
-  - {fileID: 11400000, guid: 5900b1656ffed9944bac705ab814e4f5, type: 2}
-  studentsData:
-  - {fileID: 11400000, guid: 6704ff2166d28404da979ea3c1155a8a, type: 2}
-  - {fileID: 11400000, guid: e1d6448ac54a1904b89e7abf6f283c5d, type: 2}
-  - {fileID: 11400000, guid: 29bf3d781963d894bba967e16f22c8ee, type: 2}
-  - {fileID: 11400000, guid: b8dfb00607708be498bdec16d3fa9624, type: 2}
 --- !u!114 &1473428257
 MonoBehaviour:
   m_ObjectHideFlags: 0

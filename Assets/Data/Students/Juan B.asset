@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 8fc2225f7a30b134f825dee41abcbee0, type: 3}
   m_Name: Juan B
   m_EditorClassIdentifier: Assembly-CSharp::StudentData
   name: Juan B
   classNames:
-  - DV
-  - SON
+  - FP
+  - FC
+  - MD
   facultyActivities: []
-  per: 2
+  per: 0
   autoLunchActivity: 1

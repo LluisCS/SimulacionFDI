@@ -5,30 +5,21 @@ public class FreeCamera : MonoBehaviour
 {
 
     /*
-    
     wasd : basic movement
     shift : Makes camera accelerate
     */
 
-    public string deactiveKey = "e";
     public float mainSpeed = 100.0f; //regular speed
     public float shiftAdd = 250.0f; //multiplied by how long shift is held.  Basically running
     public float maxShift = 1000.0f; //Maximum speed when holdin gshift
     public float camSens = 0.25f; //How sensitive it with mouse
     private Vector3 lastMouse = new Vector3(255, 255, 255); //kind of in the middle of the screen, rather than at the top (play)
     private float totalRun = 1.0f;
-    private bool active = false;
+    public bool active = false;
 
     void Update()
     {
-        if (Input.GetKeyDown(deactiveKey))
-        {
-            active = !active;
-            if (active)
-                Cursor.lockState = CursorLockMode.Locked;
-            else
-                Cursor.lockState = CursorLockMode.None;
-        }
+        
         if (!active)
             return;
         lastMouse = Input.mousePosition - lastMouse;
@@ -56,17 +47,7 @@ public class FreeCamera : MonoBehaviour
 
         p = p * Time.deltaTime;
         Vector3 newPosition = transform.position;
-        if (Input.GetKey(KeyCode.Space))
-        { //If player wants to move on X and Z axis only
-            //transform.Translate(p);
-            //newPosition.x = transform.position.x;
-            //newPosition.z = transform.position.z;
-            //transform.position = newPosition;
-        }
-        else
-        {
-            transform.Translate(p);
-        }
+        transform.Translate(p);
 
     }
 
@@ -91,4 +72,5 @@ public class FreeCamera : MonoBehaviour
         }
         return p_Velocity;
     }
+        
 }

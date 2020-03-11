@@ -9,22 +9,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: ae44bb7687d0a5e46bc311d7eedbdc69, type: 3}
   m_Name: DV
   m_EditorClassIdentifier: Assembly-CSharp::SubjectData
   name: DV
   classes:
-  - roomName: Aula4
+  - roomName: Aula2
     name: 
     day: 0
-    startHour: 9
-    startMinute: 30
-    durationHours: 1
-    durationMinutes: 30
-  - roomName: Aula4
+    startHour: 12
+    startMinute: 0
+    durationHours: 0
+    durationMinutes: 50
+  - roomName: Aula2
     name: 
     day: 1
-    startHour: 9
-    startMinute: 30
-    durationHours: 1
-    durationMinutes: 30
+    startHour: 12
+    startMinute: 0
+    durationHours: 0
+    durationMinutes: 50
+  - roomName: Aula2
+    name: 
+    day: 2
+    startHour: 12
+    startMinute: 0
+    durationHours: 0
+    durationMinutes: 50
+  - roomName: Aula2
+    name: 
+    day: 3
+    startHour: 12
+    startMinute: 0
+    durationHours: 0
+    durationMinutes: 50
