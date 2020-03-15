@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc2225f7a30b134f825dee41abcbee0, type: 3}
+  m_Name: Pepe
+  m_EditorClassIdentifier: 
+  name: Pepe
+  classNames: []
+  facultyActivities:
+  - roomName: Secretaria
+    name: 
+    day: 0
+    startHour: 8
+    startMinute: 0
+    durationHours: 5
+    durationMinutes: 0
+  - roomName: Secretaria
+    name: 
+    day: 1
+    startHour: 8
+    startMinute: 0
+    durationHours: 5
+    durationMinutes: 0
+  - roomName: Secretaria
+    name: 
+    day: 2
+    startHour: 8
+    startMinute: 0
+    durationHours: 5
+    durationMinutes: 0
+  - roomName: Secretaria
+    name: 
+    day: 3
+    startHour: 8
+    startMinute: 0
+    durationHours: 5
+    durationMinutes: 0
+  - roomName: Secretaria
+    name: 
+    day: 4
+    startHour: 8
+    startMinute: 0
+    durationHours: 5
+    durationMinutes: 0
+  per: 0
+  autoLunchActivity: 0

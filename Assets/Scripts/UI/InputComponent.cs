@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class InputComponent : MonoBehaviour
 {
     public GameObject pauseObject;
+    public AgentUI agUI;
     private FreeCamera freeCam;
     private FollowCamera followCam;
     private bool pause = false, lockCam = false, freeCursor = true;
@@ -40,8 +41,14 @@ public class InputComponent : MonoBehaviour
         }
         else if (Input.GetButton("Fire1"))
         {
-            lockCam = followCam.select();
-            if (lockCam) freeCam.active = false;
+            Agent ag;
+            lockCam = followCam.select(out ag);
+            if (lockCam)
+            {
+                freeCam.active = false;
+                
+            }
+            agUI.updateUI(ag);
         }
         else if (Input.GetButton("Fire2"))
         {

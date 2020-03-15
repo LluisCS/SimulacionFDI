@@ -5,30 +5,30 @@ public class FollowCamera : MonoBehaviour
 
     private Transform target = null;
 
-    public float smoothSpeed = 0.125f;
+    public float smoothSpeed = 1.25f;
     public Vector3 offset;
     private bool active = false;
 
-    void FixedUpdate()
+    void LateUpdate()
     {
         if (!active || target == null)
             return;
         Vector3 desiredPosition = target.position + offset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed*Time.deltaTime);
         transform.position = smoothedPosition;
 
         transform.LookAt(target);
     }
 
-    public bool select()
+    public bool select(out Agent ag)
     {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+        ag = null;
         if (Physics.Raycast(ray, out hit))
         {
             Transform objectHit = hit.transform;
-            Agent ag = objectHit.GetComponent<Agent>();
+            ag = objectHit.GetComponent<Agent>();
             if (ag != null)
             {
                 target = objectHit;
