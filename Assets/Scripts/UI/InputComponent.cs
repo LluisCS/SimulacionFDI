@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class InputComponent : MonoBehaviour
 {
     public GameObject pauseObject;
+    public FireAlarm fireAlarm;
     public AgentUI agUI;
     private FreeCamera freeCam;
     private FollowCamera followCam;
@@ -25,7 +26,7 @@ public class InputComponent : MonoBehaviour
             DayTime.Instance().togglePause();
             SimulationManager.Instance().togglePause();
         }
-        else if(Input.GetKeyDown(KeyCode.E))
+        else if (Input.GetKeyDown(KeyCode.E))
         {
             freeCursor = !freeCursor;
             if (freeCursor)
@@ -46,7 +47,7 @@ public class InputComponent : MonoBehaviour
             if (lockCam)
             {
                 freeCam.active = false;
-                
+
             }
             agUI.updateUI(ag);
         }
@@ -55,6 +56,15 @@ public class InputComponent : MonoBehaviour
             followCam.deselect();
             if (Cursor.lockState == CursorLockMode.Locked)
                 freeCam.active = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            followCam.changeTargetSimulation(simulation.virus);
+        }
+        else if (Input.GetKeyDown(KeyCode.O))
+        {
+            if (fireAlarm != null)
+                fireAlarm.toggleAllActive();
         }
     }
         

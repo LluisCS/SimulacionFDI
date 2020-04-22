@@ -44,4 +44,12 @@ public class FollowCamera : MonoBehaviour
         target = null;
         active = false;
     }
+
+    public void changeTargetSimulation(simulation sim)
+    {
+        if(target != null)
+        {
+            target.GetComponent<Agent>().changeSimulation(sim);
+        }
+    }
 }

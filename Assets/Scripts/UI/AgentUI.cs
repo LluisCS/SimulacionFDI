@@ -30,19 +30,9 @@ public class AgentUI : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (ag == null)
-        {
-            agentText.text = "Nothing selected.";
-            return;
-        }
-
-        agentText.text = "Name: " + ag.name + "\nType: " + ag.state.type
-            + "\nAction: " + ag.state.action
-            + "\nPersonality: " + ag.state.per
-            + "\nSimulation: " + ag.state.sim
-            + "\nCurrent Subject: " + ag.currentSubject;
+        refresh();
     }
 
     void ButtonClick()
@@ -58,21 +48,25 @@ public class AgentUI : MonoBehaviour
     public void updateUI(Agent agent)
     {
         ag = agent;
-        if (agent == null)
+        refresh();
+    }
+
+    private void refresh()
+    {
+        if (ag == null)
         {
             agentText.text = "Nothing selected.";
-
+            return;
         }
         else
         {
-            agentText.text = "Name: " + agent.name + "\nType: " + agent.state.type
-                + "\nAction: " + agent.state.action
-                + "\nPersonality: " + agent.state.per
-                + "\nSimulation: " + agent.state.sim
-                + "\nCurrent Subject: " + agent.currentSubject;
+            agentText.text = "Name: " + ag.name + "\nType: " + ag.state.type
+                + "\nAction: " + ag.state.action
+                + "\nPersonality: " + ag.state.per
+                + "\nSimulation: " + ag.state.sim
+                + "\nCurrent Subject: " + ag.currentSubject;
         }
         agentText.enabled = false;
         agentText.enabled = true;
-
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 public enum agentAction { inactive, enter, work, exit, relax}
 public enum agentType { student, teacher, other }
-public enum simulation { regular, fire, special}
+public enum simulation { regular, virus, fire, special, zombie, aliens}
 [System.Serializable]
 public enum personality { standard, late, early, chaotic }
 
@@ -29,11 +29,14 @@ public class Agent : MonoBehaviour
     private int remainingSubjects = 0, activityIndex = -1;
     public List<activity> activities;
     private bool pause = false;
+    private double timer = 0;
+    public double delay = 0.8f;
+    private Material material;
 
     void Awake()
     {
         state.moving = false;
-        state.pendingActivity = false;
+        state.pendingActivity = true;
         state.sim = simulation.regular;
         state.type = agentType.student;
         state.action = agentAction.inactive;
@@ -42,12 +45,15 @@ public class Agent : MonoBehaviour
         subjects = new Dictionary<string, SubjectInfo>(0);
         activities = new List<activity>(0);
         navAgent = GetComponent<NavMeshAgent>();
+        material = GetComponent<Renderer>().material;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (pause) return;
-        activityUpdate();
+        //if (state.sim != simulation.regular)
+        simulationUpdate();
+            
         //check destination reached
         if (state.moving)
         {
@@ -69,11 +75,6 @@ public class Agent : MonoBehaviour
                     state.action = agentAction.inactive;
                     moveToRandomExit();
                 }
-                else if(state.action == agentAction.inactive)
-                {
-                    endDay();
-                }
-                
             }
         }
 
@@ -81,20 +82,15 @@ public class Agent : MonoBehaviour
 
     public void subjectUpdate(string n, subjectState subState, Room room)
     {
-        if (!subjects.ContainsKey(n) || state.sim != simulation.regular)
+        if (!subjects.ContainsKey(n) || state.sim == simulation.fire || state.sim == simulation.aliens)
             return;
-        if (state.action == agentAction.inactive)
-        {
-            gameObject.SetActive(true);
-            state.action = agentAction.enter;
-            gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
-            navAgent.speed = SimulationManager.Instance().getAgentSpeed();
-        }
+        
         switch (subState)
         {
             case subjectState.start:
                 if (state.action != agentAction.work)
                 {
+                    spawn();
                     resetTarget();
                     currentSubject = n;
                     targetRoom = room;
@@ -110,6 +106,7 @@ public class Agent : MonoBehaviour
             case subjectState.active:
                 if(currentSubject != n  || state.action != agentAction.work)
                 {
+                    spawn();
                     resetTarget();
                     currentSubject = n;
                     targetRoom = room;
@@ -189,13 +186,12 @@ public class Agent : MonoBehaviour
                         else
                             targetSeat = targetRoom.getFirstFreeSeat();
                         targetSeat.occupied = true;
-                        state.action = agentAction.enter;
                         if (state.action == agentAction.inactive)
                         {
-                            gameObject.SetActive(true);
                             gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
                             navAgent.speed = SimulationManager.Instance().getAgentSpeed();
                         }
+                        state.action = agentAction.enter;
                         Invoke("moveToDestination", getDelay());
                     }
                 }
@@ -227,6 +223,9 @@ public class Agent : MonoBehaviour
         remainingSubjects = 0;
         weekDay day = DayTime.Instance().WeekDay();
         state.pendingActivity = activities.Count > 0;
+        changeSimulation(simulation.regular);
+        gameObject.SetActive(true);
+        GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void addSubjectCount()
@@ -274,6 +273,87 @@ public class Agent : MonoBehaviour
     {
         pause = !pause;
         navAgent.isStopped = pause;
-       
+    }
+    
+    public void changeSimulation(simulation s) {
+        switch (s)
+        {
+            case simulation.regular:
+                material.color = Color.blue;
+                break;
+            case simulation.virus:
+                material.color = Color.green;
+                break;
+            case simulation.fire:
+                material.color = Color.red;
+                state.action = agentAction.inactive;
+                moveToRandomExit();
+                break;
+            case simulation.special:
+                break;
+            default:
+                break;
+        }
+        state.sim = s;
+    }
+
+    private void simulationUpdate()
+    {
+        switch (state.sim)
+        {
+            case simulation.regular:
+                activityUpdate();
+                break;
+            case simulation.virus:
+                activityUpdate();
+                if (timer < Time.deltaTime)
+                {
+                    timer = Time.deltaTime + delay;
+                    RaycastHit[] hits = Physics.SphereCastAll(transform.position, 3, transform.forward);
+                    foreach (var hit in hits)
+                    {
+                        Agent ag = hit.transform.GetComponent<Agent>();
+                        if (ag != null && ag.state.sim != simulation.virus)
+                            ag.changeSimulation(simulation.virus);
+                    }
+                }
+                break;
+            case simulation.fire:
+                if (timer < Time.deltaTime)
+                {
+                    timer = Time.deltaTime + delay;
+                    RaycastHit[] hits = Physics.SphereCastAll(transform.position, 7, transform.forward);
+                    foreach (var hit in hits)
+                    {
+                        Agent ag = hit.transform.GetComponent<Agent>();
+                        if (ag != null && ag.state.sim != simulation.fire)
+                            ag.changeSimulation(simulation.fire);
+                    }
+                }
+                break;
+            case simulation.special:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if(other.GetComponent<Exit>() != null)
+        {
+            if(state.action == agentAction.inactive)
+                endDay();
+        }
+    }
+
+    private void spawn()
+    {
+        if (state.action == agentAction.inactive)
+        {
+            state.action = agentAction.enter;
+            gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
+            navAgent.speed = SimulationManager.Instance().getAgentSpeed();
+            GetComponent<MeshRenderer>().enabled = true;
+        }
     }
 }
