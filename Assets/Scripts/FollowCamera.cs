@@ -20,7 +20,7 @@ public class FollowCamera : MonoBehaviour
         transform.LookAt(target);
     }
 
-    public bool select(out Agent ag)
+    public bool Select(out Agent ag)
     {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -39,17 +39,17 @@ public class FollowCamera : MonoBehaviour
         return active;
     }
 
-    public void deselect()
+    public void Deselect()
     {
         target = null;
         active = false;
     }
 
-    public void changeTargetSimulation(simulation sim)
+    public void ChangeTargetSimulation(simulation sim)
     {
         if(target != null)
         {
-            target.GetComponent<Agent>().changeSimulation(sim);
+            target.GetComponent<Agent>().ChangeSimulation(sim);
         }
     }
 }

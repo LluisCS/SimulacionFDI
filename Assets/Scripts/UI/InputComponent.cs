@@ -24,7 +24,7 @@ public class InputComponent : MonoBehaviour
             pause = !pause;
             pauseObject.SetActive(pause);
             DayTime.Instance().togglePause();
-            SimulationManager.Instance().togglePause();
+            SimulationManager.Instance().TogglePause();
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
@@ -43,7 +43,7 @@ public class InputComponent : MonoBehaviour
         else if (Input.GetButton("Fire1"))
         {
             Agent ag;
-            lockCam = followCam.select(out ag);
+            lockCam = followCam.Select(out ag);
             if (lockCam)
             {
                 freeCam.active = false;
@@ -53,18 +53,22 @@ public class InputComponent : MonoBehaviour
         }
         else if (Input.GetButton("Fire2"))
         {
-            followCam.deselect();
+            followCam.Deselect();
             if (Cursor.lockState == CursorLockMode.Locked)
                 freeCam.active = true;
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-            followCam.changeTargetSimulation(simulation.virus);
+            followCam.ChangeTargetSimulation(simulation.virus);
+        }
+        else if (Input.GetKeyDown(KeyCode.I))
+        {
+            followCam.ChangeTargetSimulation(simulation.zombie);
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
             if (fireAlarm != null)
-                fireAlarm.toggleAllActive();
+                fireAlarm.ToggleAllActive();
         }
     }
         

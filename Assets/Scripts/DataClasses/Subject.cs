@@ -24,20 +24,20 @@ public class Subject
         }
     }
 
-    private void messageAgents()
+    private void MessageAgents()
     {
         foreach (var student in info.students)
         {
-            student.subjectUpdate(info.name, info.state, room);
+            student.SubjectUpdate(info.name, info.state, room);
         }
 
         foreach (var teacher in info.teachers)
         {
-            teacher.subjectUpdate(info.name, info.state, room);
+            teacher.SubjectUpdate(info.name, info.state, room);
         }
     }
 
-    public operation update(uint h, uint min)
+    public operation Update(uint h, uint min)
     {
         operation op = operation.nothing;
         switch (info.state)
@@ -46,14 +46,14 @@ public class Subject
                 if ((h * 60) + min > (startHour * 60) + startMinute)
                 {
                     info.state = subjectState.active;
-                    messageAgents();
+                    MessageAgents();
                 }
                 break;
             case subjectState.active:
                 if ((h * 60) + min > (endHour * 60) + endMinute)
                 {
                     info.state = subjectState.end;
-                    messageAgents();
+                    MessageAgents();
                 }
                 break;
             case subjectState.end:
@@ -61,7 +61,7 @@ public class Subject
                 {
                     op = operation.remove;
                     info.state = subjectState.inactive;
-                    messageAgents();
+                    MessageAgents();
                 }
                 break;
             case subjectState.inactive:
@@ -69,7 +69,7 @@ public class Subject
                 {
                     op = operation.add;
                     info.state = subjectState.start;
-                    messageAgents();
+                    MessageAgents();
                 }
                 break;
             default:

@@ -65,6 +65,13 @@ public class LayoutManager : MonoBehaviour
         return null;
     }
 
+    public Vector3 getRandomPosition()
+    {
+        Vector3 pos = Vector3.zero;
+
+        return pos;
+    }
+
     //public Floor getRoomFloor(string name)
     //{
     //    foreach (Floor floor in FDI)

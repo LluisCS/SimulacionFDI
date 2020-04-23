@@ -32,6 +32,7 @@ public class Agent : MonoBehaviour
     private double timer = 0;
     public double delay = 0.8f;
     private Material material;
+    private Transform followTarget = null;
 
     void Awake()
     {
@@ -52,7 +53,7 @@ public class Agent : MonoBehaviour
     {
         if (pause) return;
         //if (state.sim != simulation.regular)
-        simulationUpdate();
+        SimulationUpdate();
             
         //check destination reached
         if (state.moving)
@@ -73,14 +74,14 @@ public class Agent : MonoBehaviour
                 if(state.action == agentAction.relax)
                 {
                     state.action = agentAction.inactive;
-                    moveToRandomExit();
+                    MoveToRandomExit();
                 }
             }
         }
 
     }
 
-    public void subjectUpdate(string n, subjectState subState, Room room)
+    public void SubjectUpdate(string n, subjectState subState, Room room)
     {
         if (!subjects.ContainsKey(n) || state.sim == simulation.fire || state.sim == simulation.aliens)
             return;
@@ -90,8 +91,8 @@ public class Agent : MonoBehaviour
             case subjectState.start:
                 if (state.action != agentAction.work)
                 {
-                    spawn();
-                    resetTarget();
+                    SetUp();
+                    ResetTarget();
                     currentSubject = n;
                     targetRoom = room;
                     if (state.type == agentType.teacher)
@@ -100,14 +101,14 @@ public class Agent : MonoBehaviour
                         targetSeat = room.getFirstFreeSeat();
                     targetSeat.occupied = true;
                     state.action = agentAction.enter;
-                    Invoke("moveToDestination", getDelay());
+                    Invoke("MoveToDestination", GetDelay());
                 }
                 break;
             case subjectState.active:
                 if(currentSubject != n  || state.action != agentAction.work)
                 {
-                    spawn();
-                    resetTarget();
+                    SetUp();
+                    ResetTarget();
                     currentSubject = n;
                     targetRoom = room;
                     if (state.type == agentType.teacher)
@@ -116,7 +117,7 @@ public class Agent : MonoBehaviour
                         targetSeat = room.getFirstFreeSeat();
                     targetSeat.occupied = true;
                     state.action = agentAction.enter;
-                    Invoke("moveToDestination", getDelay());
+                    Invoke("MoveToDestination", GetDelay());
                 }
                 break;
             case subjectState.end:
@@ -124,22 +125,22 @@ public class Agent : MonoBehaviour
                 {
                     remainingSubjects--;
                     Room r = targetRoom;
-                    resetTarget();
+                    ResetTarget();
                     state.action = agentAction.exit;
                     targetSeat = r.floor.getClosestSeat(transform.position);
                     if (targetSeat == null)
-                        moveToRandomExit();
+                        MoveToRandomExit();
                     else
                     {
                         targetSeat.occupied = true;
-                        Invoke("moveToDestination", getDelay());
+                        Invoke("MoveToDestination", GetDelay());
                     }
                 }
                 break;
             case subjectState.inactive:
                 if (currentSubject == n)
                 {
-                    resetTarget();
+                    ResetTarget();
                 }
                 break;
             default:
@@ -147,7 +148,7 @@ public class Agent : MonoBehaviour
         }
     }
 
-    private void activityUpdate() {
+    private void ActivityUpdate() {
         if (!state.pendingActivity)
             return;
         if(activityIndex != -1)
@@ -156,15 +157,15 @@ public class Agent : MonoBehaviour
             if (state.action == agentAction.work && DayTime.Instance().activityEnded(a))
             {
                 Room r = targetRoom;
-                resetTarget();
+                ResetTarget();
                 state.action = agentAction.exit;
                 targetSeat = r.floor.getClosestSeat(transform.position);
                 if (targetSeat == null)
-                    moveToRandomExit();
+                    MoveToRandomExit();
                 else
                 {
                     targetSeat.occupied = true;
-                    Invoke("moveToDestination", getDelay());
+                    Invoke("MoveToDestination", GetDelay());
                 }
             }
         }
@@ -178,7 +179,7 @@ public class Agent : MonoBehaviour
                     state.pendingActivity = true;
                     if (DayTime.Instance().activityStarted(a))
                     {
-                        resetTarget();
+                        ResetTarget();
                         activityIndex = activities.IndexOf(a);
                         targetRoom = SimulationManager.Instance().GetRoom(a.roomName);
                         if (state.type == agentType.teacher)
@@ -188,11 +189,11 @@ public class Agent : MonoBehaviour
                         targetSeat.occupied = true;
                         if (state.action == agentAction.inactive)
                         {
-                            gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
-                            navAgent.speed = SimulationManager.Instance().getAgentSpeed();
+                            gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
+                            navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
                         }
                         state.action = agentAction.enter;
-                        Invoke("moveToDestination", getDelay());
+                        Invoke("MoveToDestination", GetDelay());
                     }
                 }
             }
@@ -200,7 +201,7 @@ public class Agent : MonoBehaviour
     }
 
 
-    private void resetTarget()
+    private void ResetTarget()
     {
         targetRoom = null;
         if(targetSeat != null)
@@ -208,43 +209,46 @@ public class Agent : MonoBehaviour
         targetSeat = null;
         currentSubject = "None";
         activityIndex = -1;
+        navAgent.isStopped = true;
+        navAgent.ResetPath();
     }
 
-    private void endDay()
+    private void EndDay()
     {
         gameObject.SetActive(false);
         state.action = agentAction.inactive;
     }
 
-    public void startDay()
+    public void StartDay()
     {
-        resetTarget();
-        endDay();
+        ResetTarget();
+        EndDay();
         remainingSubjects = 0;
         weekDay day = DayTime.Instance().WeekDay();
         state.pendingActivity = activities.Count > 0;
-        changeSimulation(simulation.regular);
+        ChangeSimulation(simulation.regular);
         gameObject.SetActive(true);
+        transform.position = Vector3.zero;
         GetComponent<MeshRenderer>().enabled = false;
     }
 
-    public void addSubjectCount()
+    public void AddSubjectCount()
     {
         remainingSubjects++;
     }
 
-    private void moveToDestination() {
+    private void MoveToDestination() {
         navAgent.SetDestination(targetSeat.position);
         state.moving = true;
     }
 
-    private void moveToRandomExit()
+    private void MoveToRandomExit()
     {
-        navAgent.SetDestination(SimulationManager.Instance().getRandomEntrance());
+        navAgent.SetDestination(SimulationManager.Instance().GetRandomEntrance());
         state.moving = true;
     }
 
-    private float getDelay()
+    private float GetDelay()
     {
         float delay = 0.0f;
         float ran = 0;
@@ -269,13 +273,13 @@ public class Agent : MonoBehaviour
         delay = (delay * 60) / (float)DayTime.Instance().getTimeSpeed();
         return delay;
     }
-    public void togglePause()
+    public void TogglePause()
     {
         pause = !pause;
         navAgent.isStopped = pause;
     }
     
-    public void changeSimulation(simulation s) {
+    public void ChangeSimulation(simulation s) {
         switch (s)
         {
             case simulation.regular:
@@ -287,9 +291,29 @@ public class Agent : MonoBehaviour
             case simulation.fire:
                 material.color = Color.red;
                 state.action = agentAction.inactive;
-                moveToRandomExit();
+                MoveToRandomExit();
                 break;
             case simulation.special:
+                break;
+            case simulation.zombie:
+                material.color = Color.black;
+                state.action = agentAction.work;
+                RaycastHit[] hits = Physics.SphereCastAll(transform.position, 4, transform.forward);
+                foreach (var hit in hits)
+                {
+                    Agent ag = hit.transform.GetComponent<Agent>();
+                    if (ag != null && ag.state.sim != simulation.zombie)
+                    {
+                        ag.ChangeSimulation(simulation.fire);
+                        if (followTarget == null)
+                        {
+                            followTarget = hit.transform;
+                            navAgent.SetDestination(followTarget.position);
+                        }
+                    }
+                    timer = Time.deltaTime + 2;
+                }
+                navAgent.speed = navAgent.speed * 1.2f;
                 break;
             default:
                 break;
@@ -297,15 +321,15 @@ public class Agent : MonoBehaviour
         state.sim = s;
     }
 
-    private void simulationUpdate()
+    private void SimulationUpdate()
     {
         switch (state.sim)
         {
             case simulation.regular:
-                activityUpdate();
+                ActivityUpdate();
                 break;
             case simulation.virus:
-                activityUpdate();
+                ActivityUpdate();
                 if (timer < Time.deltaTime)
                 {
                     timer = Time.deltaTime + delay;
@@ -314,7 +338,7 @@ public class Agent : MonoBehaviour
                     {
                         Agent ag = hit.transform.GetComponent<Agent>();
                         if (ag != null && ag.state.sim != simulation.virus)
-                            ag.changeSimulation(simulation.virus);
+                            ag.ChangeSimulation(simulation.virus);
                     }
                 }
                 break;
@@ -327,13 +351,47 @@ public class Agent : MonoBehaviour
                     {
                         Agent ag = hit.transform.GetComponent<Agent>();
                         if (ag != null && ag.state.sim != simulation.fire)
-                            ag.changeSimulation(simulation.fire);
+                            ag.ChangeSimulation(simulation.fire);
                     }
                 }
                 break;
             case simulation.special:
                 break;
+            case simulation.zombie:
+                if (timer < Time.deltaTime)
+                {
+                    timer = Time.deltaTime + delay + 0.2f;
+                    float minDist = 1000;
+                    Transform newTarget = null;
+                    RaycastHit[] hits = Physics.SphereCastAll(transform.position, 8, transform.forward);
+                    foreach (var hit in hits)
+                    {
+                        Agent ag = hit.transform.GetComponent<Agent>();
+                        if (ag != null && ag.state.sim != simulation.fire)
+                            ag.ChangeSimulation(simulation.fire);
+                        float dist = Vector3.Distance(hit.transform.position, transform.position);
+                        if (dist < 1 && ag.state.sim != simulation.zombie)
+                            ag.ChangeSimulation(simulation.zombie);
+                        else if (dist < minDist)
+                        {
+                            minDist = dist;
+                            newTarget = ag.transform;
+                        }
+                    }
+                    if (Vector3.Distance(followTarget.position, transform.position) > minDist || followTarget.GetComponent<Agent>().state.sim == simulation.zombie) 
+                        followTarget = newTarget;
+                    
+                    if(followTarget != null)
+                        navAgent.SetDestination(followTarget.position);
+                    else
+                    {
+                        navAgent.SetDestination(SimulationManager.Instance().GetRandomEntrance());
+                        timer += 3;
+                    }
+                }
+                break;
             default:
+                ActivityUpdate();
                 break;
         }
     }
@@ -342,17 +400,24 @@ public class Agent : MonoBehaviour
         if(other.GetComponent<Exit>() != null)
         {
             if(state.action == agentAction.inactive)
-                endDay();
+                EndDay();
         }
     }
 
-    private void spawn()
+    public void UpdateSpeed(float speed)
+    {
+        if (state.sim == simulation.zombie)
+            speed *= 1.2f;
+        navAgent.speed = speed;
+    }
+
+    private void SetUp()
     {
         if (state.action == agentAction.inactive)
         {
             state.action = agentAction.enter;
-            gameObject.transform.position = SimulationManager.Instance().getRandomEntrance();
-            navAgent.speed = SimulationManager.Instance().getAgentSpeed();
+            gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
+            navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
             GetComponent<MeshRenderer>().enabled = true;
         }
     }

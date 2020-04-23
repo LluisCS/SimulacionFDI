@@ -11,7 +11,7 @@ public class DataManager : MonoBehaviour
     private TeacherData[] teachersData;
     private StudentData[] studentsData;
 
-    public SubjectSchedule generateSchedule(LayoutManager LManager) {
+    public SubjectSchedule GenerateSchedule(LayoutManager LManager) {
         SubjectSchedule schedule = new SubjectSchedule();
         subjectsData = (SubjectData[])Resources.FindObjectsOfTypeAll(typeof(SubjectData));
         teachersData = (TeacherData[])Resources.FindObjectsOfTypeAll(typeof(TeacherData));
@@ -57,7 +57,7 @@ public class DataManager : MonoBehaviour
                     agentComp.activities.Add(a);
                 }
                 if (teacher.autoLunchActivity)
-                    generateLunchActivities(agentComp);
+                    GenerateLunchActivities(agentComp);
             }
         }
         studentParent = new GameObject("studentParent");
@@ -88,13 +88,13 @@ public class DataManager : MonoBehaviour
                     agentComp.activities.Add(a);
                 }
                 if (student.autoLunchActivity)
-                    generateLunchActivities(agentComp);
+                    GenerateLunchActivities(agentComp);
             }
         }
         return schedule;
     }
     
-    private void generateLunchActivities(Agent ag)
+    private void GenerateLunchActivities(Agent ag)
     {
         for (int i = 0; i < 5; i++)
         {

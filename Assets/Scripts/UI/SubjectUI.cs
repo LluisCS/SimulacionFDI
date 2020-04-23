@@ -42,7 +42,7 @@ public class SubjectUI : MonoBehaviour
             buttonText.text = "SHOW";
     }
 
-    public void updateUI(List<Subject> activeSubjects)
+    public void UpdateUI(List<Subject> activeSubjects)
     {
         int n = activeSubjects.Count;
         int m = desplegable.childCount;

@@ -33,17 +33,17 @@ public class SimulationManager : MonoBehaviour
             Destroy(this);
         dataManager = GetComponent<DataManager>();
         layoutManager = GetComponent<LayoutManager>();
-        schedule = dataManager.generateSchedule(layoutManager);
+        schedule = dataManager.GenerateSchedule(layoutManager);
 
-        startDay(DayTime.Instance().WeekDay());
-        updateSpeed();
+        StartDay(DayTime.Instance().WeekDay());
+        UpdateSpeed();
     }
 
     
     void Update()
     {
         if (day != DayTime.Instance().WeekDay())
-            startDay(DayTime.Instance().WeekDay());
+            StartDay(DayTime.Instance().WeekDay());
 
 
         day = DayTime.Instance().WeekDay();
@@ -54,51 +54,52 @@ public class SimulationManager : MonoBehaviour
         {
             //if (logs) Debug.Log(s.name + " exists");
 
-            operation op = s.update(hour, minute);
+            operation op = s.Update(hour, minute);
             if (op == operation.add)
             {
                 if (logs) Debug.Log(s.info.name + " has started.");
                 schedule.activeSubjects.Add(s);
                 s.room.occupied = true;
-                subjectUI.updateUI(schedule.activeSubjects);
+                subjectUI.UpdateUI(schedule.activeSubjects);
             }
             else if(op== operation.remove)
             {
                 if (logs) Debug.Log(s.info.name + " has ended.");
                 schedule.activeSubjects.Remove(s);
                 s.room.occupied = false;
-                subjectUI.updateUI(schedule.activeSubjects);
+                subjectUI.UpdateUI(schedule.activeSubjects);
             }
         }
     }
 
-    private void startDay(weekDay day)
+    private void StartDay(weekDay day)
     {
         foreach (Transform student in dataManager.studentParent.transform)
         {
             Agent ag = student.GetComponent<Agent>();
-            ag.startDay();
+            ag.StartDay();
         }
         foreach (Transform teacher in dataManager.teacherParent.transform)
         {
             Agent ag = teacher.GetComponent<Agent>();
-            ag.startDay();
+            ag.StartDay();
         }
         schedule.activeSubjects.Clear();
         foreach (Subject s in schedule.days[(int)day])
         {
             foreach (var student in s.info.students)
             {
-                student.addSubjectCount();
+                student.AddSubjectCount();
             }
             foreach (var teacher in s.info.teachers)
             {
-                teacher.addSubjectCount();
+                teacher.AddSubjectCount();
             }
         }
+        UpdateSpeed();
     }
 
-    public Vector3 getRandomEntrance()
+    public Vector3 GetRandomEntrance()
     {
         return layoutManager.getRandomEntrance();
     }
@@ -108,7 +109,7 @@ public class SimulationManager : MonoBehaviour
         return layoutManager.getRoom(name);
     }
 
-    public void changeSpeed(bool decrease)
+    public void ChangeSpeed(bool decrease)
     {
         if (decrease)
         {
@@ -124,31 +125,31 @@ public class SimulationManager : MonoBehaviour
             else
                 speedMultiplier += speedInrement;
         }
-        updateSpeed();
+        UpdateSpeed();
     }
 
-    private void updateSpeed()
+    private void UpdateSpeed()
     {
         DayTime.Instance().setTimeSpeed(initialTimeSpeed * speedMultiplier);
 
-        foreach (NavMeshAgent ag in dataManager.studentParent.GetComponentsInChildren<NavMeshAgent>())
-            ag.speed = speedMultiplier * initialAgentSpeed;
-        foreach (NavMeshAgent ag in dataManager.teacherParent.GetComponentsInChildren<NavMeshAgent>())
-            ag.speed = speedMultiplier * initialAgentSpeed;
+        foreach (Agent ag in dataManager.studentParent.GetComponentsInChildren<Agent>())
+            ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
+        foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
+            ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
         speedText.text = "x " + speedMultiplier.ToString("F1");
     }
 
-    public void togglePause()
+    public void TogglePause()
     {
         pause = !pause;
         foreach (Agent ag in dataManager.studentParent.GetComponentsInChildren<Agent>())
-            ag.togglePause();
+            ag.TogglePause();
         foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
-            ag.togglePause();
+            ag.TogglePause();
 
     }
 
-    public float getAgentSpeed()
+    public float GetAgentSpeed()
     {
         return speedMultiplier * initialAgentSpeed;
     }

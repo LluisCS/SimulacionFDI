@@ -18,12 +18,12 @@ public class FireAlarm : MonoBehaviour
             {
                 Agent ag = hit.transform.GetComponent<Agent>();
                 if (ag != null && ag.state.sim != simulation.fire)
-                    ag.changeSimulation(simulation.fire);
+                    ag.ChangeSimulation(simulation.fire);
             }
         }
     }
 
-    public void toggleAllActive() {
+    public void ToggleAllActive() {
         foreach (Transform child in transform.parent.transform)
         {
             FireAlarm fa = child.GetComponent<FireAlarm>();
