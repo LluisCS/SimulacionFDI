@@ -6,16 +6,24 @@ public class DataManager : MonoBehaviour
 {
     public GameObject agentPrefab;
     [HideInInspector]
-    public GameObject studentParent, teacherParent;
+    //public GameObject studentParent, teacherParent;
+    public GameObject agentParent;
+    public bool logs = false;
     private SubjectData[] subjectsData;
     private TeacherData[] teachersData;
     private StudentData[] studentsData;
 
     public SubjectSchedule GenerateSchedule(LayoutManager LManager) {
         SubjectSchedule schedule = new SubjectSchedule();
+
         subjectsData = (SubjectData[])Resources.FindObjectsOfTypeAll(typeof(SubjectData));
         teachersData = (TeacherData[])Resources.FindObjectsOfTypeAll(typeof(TeacherData));
         studentsData = (StudentData[])Resources.FindObjectsOfTypeAll(typeof(StudentData));
+
+        if (logs) Debug.Log(subjectsData.Length);
+        if (logs) Debug.Log(studentsData.Length);
+        if (logs) Debug.Log(teachersData.Length);
+
         foreach (var sub in subjectsData)
         {
             SubjectInfo info = new SubjectInfo(sub.name);
@@ -26,13 +34,15 @@ public class DataManager : MonoBehaviour
                 info.hours.Add(s);
             }
             schedule.subjectInfos.Add(sub.name, info);
+            if (logs) Debug.Log(sub.name + " loaded.");
+
         }
 
-        teacherParent = new GameObject("teacherParent");
+        agentParent = new GameObject("agentParent");
         foreach (var teacher in teachersData)
         {
             GameObject agentObj = Instantiate(agentPrefab);
-            agentObj.transform.SetParent(teacherParent.transform);
+            agentObj.transform.SetParent(agentParent.transform);
             Agent agentComp = agentObj.GetComponent<Agent>();
             agentComp.state.type = agentType.teacher;
             agentComp.name = teacher.name;
@@ -59,12 +69,13 @@ public class DataManager : MonoBehaviour
                 if (teacher.autoLunchActivity)
                     GenerateLunchActivities(agentComp);
             }
+            if (logs) Debug.Log(teacher.name + " loaded.");
         }
-        studentParent = new GameObject("studentParent");
+        //studentParent = new GameObject("studentParent");
         foreach (var student in studentsData)
         {
             GameObject agentObj = Instantiate(agentPrefab);
-            agentObj.transform.SetParent(studentParent.transform);
+            agentObj.transform.SetParent(agentParent.transform);
             Agent agentComp = agentObj.GetComponent<Agent>();
             agentComp.state.per = student.per;
             agentComp.name = student.name;
@@ -90,6 +101,7 @@ public class DataManager : MonoBehaviour
                 if (student.autoLunchActivity)
                     GenerateLunchActivities(agentComp);
             }
+            if (logs) Debug.Log(student.name + " loaded.");
         }
         return schedule;
     }

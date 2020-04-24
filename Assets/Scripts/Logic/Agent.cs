@@ -187,12 +187,7 @@ public class Agent : MonoBehaviour
                         else
                             targetSeat = targetRoom.getFirstFreeSeat();
                         targetSeat.occupied = true;
-                        if (state.action == agentAction.inactive)
-                        {
-                            gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
-                            navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
-                        }
-                        state.action = agentAction.enter;
+                        SetUp();
                         Invoke("MoveToDestination", GetDelay());
                     }
                 }
@@ -298,27 +293,12 @@ public class Agent : MonoBehaviour
             case simulation.zombie:
                 material.color = Color.black;
                 state.action = agentAction.work;
-                RaycastHit[] hits = Physics.SphereCastAll(transform.position, 4, transform.forward);
-                foreach (var hit in hits)
-                {
-                    Agent ag = hit.transform.GetComponent<Agent>();
-                    if (ag != null && ag.state.sim != simulation.zombie)
-                    {
-                        ag.ChangeSimulation(simulation.fire);
-                        if (followTarget == null)
-                        {
-                            followTarget = hit.transform;
-                            navAgent.SetDestination(followTarget.position);
-                        }
-                    }
-                    timer = Time.deltaTime + 2;
-                }
-                navAgent.speed = navAgent.speed * 1.2f;
                 break;
             default:
                 break;
         }
         state.sim = s;
+        UpdateSpeed(SimulationManager.Instance().GetAgentSpeed());
     }
 
     private void SimulationUpdate()
@@ -330,27 +310,30 @@ public class Agent : MonoBehaviour
                 break;
             case simulation.virus:
                 ActivityUpdate();
-                if (timer < Time.deltaTime)
+                if (timer < Time.time)
                 {
-                    timer = Time.deltaTime + delay;
-                    RaycastHit[] hits = Physics.SphereCastAll(transform.position, 3, transform.forward);
-                    foreach (var hit in hits)
+                    timer = Time.time + delay;
+                    foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
                     {
-                        Agent ag = hit.transform.GetComponent<Agent>();
-                        if (ag != null && ag.state.sim != simulation.virus)
+                        if (Vector3.Distance(t.position, transform.position) > 5)
+                            continue;
+                        Agent ag = t.transform.GetComponent<Agent>();
+                        if (ag.state.sim != simulation.virus)
                             ag.ChangeSimulation(simulation.virus);
                     }
                 }
                 break;
             case simulation.fire:
-                if (timer < Time.deltaTime)
+                if (timer < Time.time)
                 {
-                    timer = Time.deltaTime + delay;
-                    RaycastHit[] hits = Physics.SphereCastAll(transform.position, 7, transform.forward);
-                    foreach (var hit in hits)
+                    timer = Time.time + delay;
+                   
+                    foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
                     {
-                        Agent ag = hit.transform.GetComponent<Agent>();
-                        if (ag != null && ag.state.sim != simulation.fire)
+                        if (Vector3.Distance(t.position, transform.position) > 8)
+                            continue;
+                        Agent ag = t.transform.GetComponent<Agent>();
+                        if (ag.state.sim != simulation.fire && ag.state.sim != simulation.zombie)
                             ag.ChangeSimulation(simulation.fire);
                     }
                 }
@@ -358,19 +341,27 @@ public class Agent : MonoBehaviour
             case simulation.special:
                 break;
             case simulation.zombie:
-                if (timer < Time.deltaTime)
+                if (timer < Time.time)
                 {
-                    timer = Time.deltaTime + delay + 0.2f;
+                    timer = Time.time + delay;
                     float minDist = 1000;
                     Transform newTarget = null;
-                    RaycastHit[] hits = Physics.SphereCastAll(transform.position, 8, transform.forward);
-                    foreach (var hit in hits)
+                    
+                    foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
                     {
-                        Agent ag = hit.transform.GetComponent<Agent>();
-                        if (ag != null && ag.state.sim != simulation.fire)
+                        float dist = Vector3.Distance(t.transform.position, transform.position);
+                        if (dist > 8)
+                            continue;
+
+                        Agent ag = t.transform.GetComponent<Agent>();
+
+                        if (ag.state.sim == simulation.zombie)
+                            continue;
+                       
+                        if (ag.state.sim != simulation.fire)
                             ag.ChangeSimulation(simulation.fire);
-                        float dist = Vector3.Distance(hit.transform.position, transform.position);
-                        if (dist < 1 && ag.state.sim != simulation.zombie)
+                        
+                        if (dist < 1)
                             ag.ChangeSimulation(simulation.zombie);
                         else if (dist < minDist)
                         {
@@ -378,15 +369,18 @@ public class Agent : MonoBehaviour
                             newTarget = ag.transform;
                         }
                     }
-                    if (Vector3.Distance(followTarget.position, transform.position) > minDist || followTarget.GetComponent<Agent>().state.sim == simulation.zombie) 
+                    if (followTarget == null || Vector3.Distance(followTarget.position, transform.position) > minDist || followTarget.GetComponent<Agent>().state.sim == simulation.zombie) 
                         followTarget = newTarget;
-                    
-                    if(followTarget != null)
+
+                    if (followTarget != null)
+                    {
                         navAgent.SetDestination(followTarget.position);
+                        state.moving = true;
+                    }
                     else
                     {
-                        navAgent.SetDestination(SimulationManager.Instance().GetRandomEntrance());
-                        timer += 3;
+                        MoveToRandomExit();
+                        timer += 1;
                     }
                 }
                 break;

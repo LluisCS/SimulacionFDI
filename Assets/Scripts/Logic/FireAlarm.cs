@@ -10,9 +10,10 @@ public class FireAlarm : MonoBehaviour
 
     void Update()
     {
-        if (active && timer < Time.deltaTime)
+        return;
+        if (active && timer < Time.time)
         {
-            timer = Time.deltaTime + delay;
+            timer = Time.time + delay;
             RaycastHit[] hits = Physics.SphereCastAll(transform.position, 12, transform.forward);
             foreach (var hit in hits)
             {

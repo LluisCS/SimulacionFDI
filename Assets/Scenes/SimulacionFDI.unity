@@ -40775,8 +40775,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 7983169098014086405, guid: 0f549a1341a1c5342abaf25952788eab,
     type: 3}
-  studentParent: {fileID: 0}
-  teacherParent: {fileID: 0}
+  agentParent: {fileID: 0}
+  logs: 0
 --- !u!114 &1473428257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40789,6 +40789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac57d81c2cc98784ca1caf98f1b2a579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataManager: {fileID: 0}
   logs: 0
   subjectUI: {fileID: 1419358594}
   speedText: {fileID: 481875648}
@@ -86559,7 +86560,7 @@ PrefabInstance:
     - target: {fileID: 7983169098014086405, guid: 0f549a1341a1c5342abaf25952788eab,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2305004064313723479, guid: 0f549a1341a1c5342abaf25952788eab,
         type: 3}

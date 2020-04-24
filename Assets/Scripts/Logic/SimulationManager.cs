@@ -7,13 +7,14 @@ using UnityEngine.UI;
 [RequireComponent(typeof(DataManager))] [RequireComponent(typeof(LayoutManager))]
 public class SimulationManager : MonoBehaviour
 {
-    private static SimulationManager instance;
+    private static SimulationManager instance = null;
     public static SimulationManager Instance() {
         if (instance == null)
             Debug.LogError("Simulation Manager not initiated");
         return instance;
     }
-    private DataManager dataManager;
+    [HideInInspector]
+    public DataManager dataManager;
     private LayoutManager layoutManager;
     public SubjectSchedule schedule;
     public bool logs = false;
@@ -27,12 +28,18 @@ public class SimulationManager : MonoBehaviour
 
     void Start()
     {
+
         if (instance == null)
             instance = this;
         else
             Destroy(this);
+
         dataManager = GetComponent<DataManager>();
         layoutManager = GetComponent<LayoutManager>();
+
+        if (dataManager == null || layoutManager == null)
+            Debug.LogError("Data or Layout manager missing.");
+
         schedule = dataManager.GenerateSchedule(layoutManager);
 
         StartDay(DayTime.Instance().WeekDay());
@@ -74,16 +81,16 @@ public class SimulationManager : MonoBehaviour
 
     private void StartDay(weekDay day)
     {
-        foreach (Transform student in dataManager.studentParent.transform)
+        foreach (Transform student in dataManager.agentParent.transform)
         {
             Agent ag = student.GetComponent<Agent>();
             ag.StartDay();
         }
-        foreach (Transform teacher in dataManager.teacherParent.transform)
-        {
-            Agent ag = teacher.GetComponent<Agent>();
-            ag.StartDay();
-        }
+        //foreach (Transform teacher in dataManager.teacherParent.transform)
+        //{
+        //    Agent ag = teacher.GetComponent<Agent>();
+        //    ag.StartDay();
+        //}
         schedule.activeSubjects.Clear();
         foreach (Subject s in schedule.days[(int)day])
         {
@@ -132,20 +139,20 @@ public class SimulationManager : MonoBehaviour
     {
         DayTime.Instance().setTimeSpeed(initialTimeSpeed * speedMultiplier);
 
-        foreach (Agent ag in dataManager.studentParent.GetComponentsInChildren<Agent>())
+        foreach (Agent ag in dataManager.agentParent.GetComponentsInChildren<Agent>())
             ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
-        foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
-            ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
+        //foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
+        //    ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
         speedText.text = "x " + speedMultiplier.ToString("F1");
     }
 
     public void TogglePause()
     {
         pause = !pause;
-        foreach (Agent ag in dataManager.studentParent.GetComponentsInChildren<Agent>())
+        foreach (Agent ag in dataManager.agentParent.GetComponentsInChildren<Agent>())
             ag.TogglePause();
-        foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
-            ag.TogglePause();
+        //foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
+        //    ag.TogglePause();
 
     }
 
