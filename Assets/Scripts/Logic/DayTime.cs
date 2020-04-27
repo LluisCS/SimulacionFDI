@@ -14,7 +14,7 @@ public class DayTime : MonoBehaviour
     private double seconds = 0;
     private weekDay day = weekDay.Monday;
     public double timeSpeed = 1.0f;
-    public int initialHour = 8, initialMinute = 45;
+    public int initialHour = 8, initialMinute = 45, lastDayHour = 22;
     public bool logs = false;
     private bool pause = false;
 
@@ -41,9 +41,9 @@ public class DayTime : MonoBehaviour
             minutes -= 60;
             hours++;
         }
-        if (hours > 23)
+        if (hours >= lastDayHour)
         {
-            hours -= 24;
+            hours -= lastDayHour;
             day++;
             if ((int)day > 4)
                 day = 0;

@@ -7,6 +7,7 @@ public enum simulation { regular, virus, fire, special, zombie, aliens}
 [System.Serializable]
 public enum personality { standard, late, early, chaotic }
 
+//struct with all the information required to know the state of an agent
 public struct agentState
 {
     public bool moving, pendingActivity;
@@ -16,13 +17,17 @@ public struct agentState
     public personality per;
 }
 
+/*Component that controls the IA of every characters of the simulation.
+ Has specific methods and data structures to manage a schedule of subjects and/or other activities in the faculty.
+ Depends on the Unity navMeshAgent component for movement around the building(pathfinding).
+*/
 [RequireComponent(typeof(NavMeshAgent))]
 public class Agent : MonoBehaviour
 {
-    public Dictionary<string, SubjectInfo> subjects;
+    public Dictionary<string, SubjectInfo> subjects;//Name of every subject of this agent with a reference to its information
     public string currentSubject = "None";
     
-    private NavMeshAgent navAgent;
+    private NavMeshAgent navAgent;//NavMeshAgent component reference
     public agentState state;
     private Seat targetSeat = null;
     private Room targetRoom = null;
@@ -34,6 +39,7 @@ public class Agent : MonoBehaviour
     private Material material;
     private Transform followTarget = null;
 
+    //called on scene start
     void Awake()
     {
         state.moving = false;
@@ -49,6 +55,7 @@ public class Agent : MonoBehaviour
         material = GetComponent<Renderer>().material;
     }
 
+    //called every loop
     void FixedUpdate()
     {
         if (pause) return;
@@ -67,6 +74,7 @@ public class Agent : MonoBehaviour
                     state.action = agentAction.relax;
             }
         }
+        //check no more pending tasks
         else
         {
             if(remainingSubjects <= 0 && !state.pendingActivity)
@@ -80,10 +88,10 @@ public class Agent : MonoBehaviour
         }
 
     }
-
+    //Updates agent state and actions according to the state of its subjects
     public void SubjectUpdate(string n, subjectState subState, Room room)
     {
-        if (!subjects.ContainsKey(n) || state.sim == simulation.fire || state.sim == simulation.aliens)
+        if (!subjects.ContainsKey(n) || state.sim == simulation.fire || state.sim == simulation.zombie)
             return;
         
         switch (subState)
@@ -105,7 +113,7 @@ public class Agent : MonoBehaviour
                 }
                 break;
             case subjectState.active:
-                if(currentSubject != n  || state.action != agentAction.work)
+                if( state.action != agentAction.work && state.action != agentAction.enter )
                 {
                     SetUp();
                     ResetTarget();
@@ -147,7 +155,7 @@ public class Agent : MonoBehaviour
                 break;
         }
     }
-
+    //Updates agent state and actions according to the activities
     private void ActivityUpdate() {
         if (!state.pendingActivity)
             return;
@@ -195,7 +203,7 @@ public class Agent : MonoBehaviour
         }
     }
 
-
+    //Cleans all paths and remaining tasks
     private void ResetTarget()
     {
         targetRoom = null;
@@ -207,13 +215,13 @@ public class Agent : MonoBehaviour
         navAgent.isStopped = true;
         navAgent.ResetPath();
     }
-
+    //Process end of day
     private void EndDay()
     {
         gameObject.SetActive(false);
         state.action = agentAction.inactive;
     }
-
+    //Process start of day
     public void StartDay()
     {
         ResetTarget();
@@ -243,6 +251,7 @@ public class Agent : MonoBehaviour
         state.moving = true;
     }
 
+    //Obtains a random delay for agent actions or movements depending on its personality
     private float GetDelay()
     {
         float delay = 0.0f;
@@ -273,7 +282,7 @@ public class Agent : MonoBehaviour
         pause = !pause;
         navAgent.isStopped = pause;
     }
-    
+    //Changes agent state with a different simulation event
     public void ChangeSimulation(simulation s) {
         switch (s)
         {
@@ -300,7 +309,7 @@ public class Agent : MonoBehaviour
         state.sim = s;
         UpdateSpeed(SimulationManager.Instance().GetAgentSpeed());
     }
-
+    //Main agent loop, depending on its state, gathers information on the environment and processes a response
     private void SimulationUpdate()
     {
         switch (state.sim)
