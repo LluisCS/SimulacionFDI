@@ -43,7 +43,8 @@ public class DayTime : MonoBehaviour
         }
         if (hours >= lastDayHour)
         {
-            hours -= lastDayHour;
+            hours = initialHour;
+            minutes = initialMinute;
             day++;
             if ((int)day > 4)
                 day = 0;
@@ -94,5 +95,14 @@ public class DayTime : MonoBehaviour
     public void togglePause()
     {
         pause = !pause;
+    }
+
+    public void skipDay()
+    {
+        day++;
+        if ((int)day > 4)
+            day = 0;
+        hours = initialHour;
+        minutes = initialMinute;
     }
 }

@@ -65,7 +65,7 @@ public class Subject
                 }
                 break;
             case subjectState.inactive:
-                if ((h * 60) + min > (startHour * 60) + startMinute - 5 && (h * 60) + min < (endHour * 60) + endMinute)
+                if ((h * 60) + min > (startHour * 60) + startMinute - 6 && (h * 60) + min < (endHour * 60) + endMinute)
                 {
                     op = operation.add;
                     info.state = subjectState.start;

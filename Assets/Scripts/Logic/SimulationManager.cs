@@ -86,11 +86,12 @@ public class SimulationManager : MonoBehaviour
             Agent ag = student.GetComponent<Agent>();
             ag.StartDay();
         }
-        //foreach (Transform teacher in dataManager.teacherParent.transform)
-        //{
-        //    Agent ag = teacher.GetComponent<Agent>();
-        //    ag.StartDay();
-        //}
+        
+        foreach (var s in schedule.activeSubjects)
+        {
+            s.room.occupied = false;
+            s.info.state = subjectState.inactive;
+        }
         schedule.activeSubjects.Clear();
         foreach (Subject s in schedule.days[(int)day])
         {
@@ -104,6 +105,7 @@ public class SimulationManager : MonoBehaviour
             }
         }
         UpdateSpeed();
+        subjectUI.UpdateUI(schedule.activeSubjects);
     }
 
     public Vector3 GetRandomEntrance()

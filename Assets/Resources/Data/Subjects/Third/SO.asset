@@ -23,7 +23,7 @@ MonoBehaviour:
     durationMinutes: 50
   - roomName: Lab3
     name: 
-    day: 0
+    day: 2
     startHour: 11
     startMinute: 0
     durationHours: 1

@@ -233,6 +233,10 @@ public class Agent : MonoBehaviour
         gameObject.SetActive(true);
         transform.position = Vector3.zero;
         GetComponent<MeshRenderer>().enabled = false;
+        if (state.type == agentType.teacher)
+            material.color = Color.yellow;
+        else
+            material.color = Color.blue;
     }
 
     public void AddSubjectCount()

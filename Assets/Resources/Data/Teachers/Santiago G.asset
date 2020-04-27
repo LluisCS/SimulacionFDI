@@ -10,25 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07cb92059dd10fd4b920d32309303533, type: 3}
-  m_Name: Manuel N
+  m_Name: Santiago G
   m_EditorClassIdentifier: Assembly-CSharp::TeacherData
-  name: Manuel N
+  name: Santiago G
   classNames:
-  - MD
+  - GE
+  - ND
   facultyActivities:
-  - roomName: Despacho302
+  - roomName: Despacho311
     name: Tutoria
     day: 2
-    startHour: 10
+    startHour: 14
     startMinute: 0
     durationHours: 1
     durationMinutes: 50
-  - roomName: Despacho302
+  - roomName: Despacho311
     name: Tutoria
-    day: 3
-    startHour: 10
+    day: 4
+    startHour: 14
     startMinute: 0
     durationHours: 1
     durationMinutes: 50
-  per: 1
+  per: 2
   autoLunchActivity: 1

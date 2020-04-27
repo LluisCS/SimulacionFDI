@@ -9,22 +9,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae44bb7687d0a5e46bc311d7eedbdc69, type: 3}
-  m_Name: ND
-  m_EditorClassIdentifier: 
-  name: ND
-  classes:
-  - roomName: Aula8
-    name: 
-    day: 2
+  m_Script: {fileID: 11500000, guid: 07cb92059dd10fd4b920d32309303533, type: 3}
+  m_Name: "Mar\xEDa S"
+  m_EditorClassIdentifier: Assembly-CSharp::TeacherData
+  name: "Mar\xEDa S"
+  classNames:
+  - IS
+  facultyActivities:
+  - roomName: Despacho315
+    name: Tutoria
+    day: 1
     startHour: 16
     startMinute: 0
     durationHours: 1
-    durationMinutes: 45
-  - roomName: Aula8
-    name: 
+    durationMinutes: 50
+  - roomName: Despacho315
+    name: Tutoria
     day: 3
     startHour: 16
     startMinute: 0
     durationHours: 1
     durationMinutes: 50
+  per: 0
+  autoLunchActivity: 1

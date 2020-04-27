@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: AM
   classes:
-  - roomName: 
+  - roomName: Aula8
     name: 
     day: 1
     startHour: 18
     startMinute: 0
     durationHours: 1
     durationMinutes: 40
-  - roomName: 
+  - roomName: Aula8
     name: 
     day: 4
     startHour: 18
