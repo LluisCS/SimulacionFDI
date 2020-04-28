@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InputComponent : MonoBehaviour
 {
-    public GameObject pauseObject;
+    public GameObject pauseObject, optionObject;
     public FireAlarm fireAlarm;
     public AgentUI agUI;
     private FreeCamera freeCam;
@@ -70,6 +70,14 @@ public class InputComponent : MonoBehaviour
             if (fireAlarm != null)
                 fireAlarm.ToggleAllActive();
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            toggleOptionsMenu();
+        }
     }
-        
+    
+    public void toggleOptionsMenu()
+    {
+        optionObject.SetActive(!optionObject.activeSelf);
+    }
 }
