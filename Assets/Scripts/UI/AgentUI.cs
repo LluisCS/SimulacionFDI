@@ -53,6 +53,7 @@ public class AgentUI : MonoBehaviour
 
     private void refresh()
     {
+        agentText.enabled = false;
         if (ag == null)
         {
             agentText.text = "Nothing selected.";
@@ -66,7 +67,6 @@ public class AgentUI : MonoBehaviour
                 + "\nSimulation: " + ag.state.sim
                 + "\nCurrent Subject: " + ag.currentSubject;
         }
-        agentText.enabled = false;
         agentText.enabled = true;
     }
 }

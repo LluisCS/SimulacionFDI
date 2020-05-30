@@ -7,7 +7,7 @@ public enum simulation { regular, virus, fire, special, zombie, aliens}
 [System.Serializable]
 public enum personality { standard, late, early, chaotic }
 
-//struct with all the information required to know the state of an agent
+//struct with the core information required to know the state of an agent
 public struct agentState
 {
     public bool moving, pendingActivity;
@@ -18,7 +18,7 @@ public struct agentState
 }
 
 /*Component that controls the IA of every characters of the simulation.
- Has specific methods and data structures to manage a schedule of subjects and/or other activities in the faculty.
+ Has specific methods and data structures to manage a schedule of subjects and other activities in the faculty.
  Depends on the Unity navMeshAgent component for movement around the building(pathfinding).
 */
 [RequireComponent(typeof(NavMeshAgent))]
@@ -26,16 +26,18 @@ public class Agent : MonoBehaviour
 {
     public Dictionary<string, SubjectInfo> subjects;//Name of every subject of this agent with a reference to its information
     public string currentSubject = "None";
-    
-    private NavMeshAgent navAgent;//NavMeshAgent component reference
+
+    public List<activity> activities;
     public agentState state;
+    public double delay = 0.8f;
+
+    private NavMeshAgent navAgent;//NavMeshAgent component reference
     private Seat targetSeat = null;
     private Room targetRoom = null;
     private int remainingSubjects = 0, activityIndex = -1;
-    public List<activity> activities;
     private bool pause = false;
     private double timer = 0;
-    public double delay = 0.8f;
+    
     private Material material;
     private Transform followTarget = null;
 
@@ -113,7 +115,7 @@ public class Agent : MonoBehaviour
                 }
                 break;
             case subjectState.active:
-                if( state.action != agentAction.work && state.action != agentAction.enter )
+                if( currentSubject == "None" || (state.action != agentAction.work && state.action != agentAction.enter) )
                 {
                     SetUp();
                     ResetTarget();
@@ -131,7 +133,6 @@ public class Agent : MonoBehaviour
             case subjectState.end:
                 if(currentSubject == n)
                 {
-                    remainingSubjects--;
                     Room r = targetRoom;
                     ResetTarget();
                     state.action = agentAction.exit;
@@ -146,6 +147,7 @@ public class Agent : MonoBehaviour
                 }
                 break;
             case subjectState.inactive:
+                remainingSubjects--;
                 if (currentSubject == n)
                 {
                     ResetTarget();
@@ -422,10 +424,11 @@ public class Agent : MonoBehaviour
     {
         if (state.action == agentAction.inactive)
         {
-            state.action = agentAction.enter;
+            
             gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
             navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
             GetComponent<MeshRenderer>().enabled = true;
         }
+        state.action = agentAction.enter;
     }
 }

@@ -9,18 +9,15 @@ public class DataManager : MonoBehaviour
     //public GameObject studentParent, teacherParent;
     public GameObject agentParent;
     public bool logs = false;
-    private SubjectData[] subjectsData;
-    private TeacherData[] teachersData;
-    private StudentData[] studentsData;
+    //private SubjectData[] subjectsData;
+    //private TeacherData[] teachersData;
+    //private StudentData[] studentsData;
 
     public SubjectSchedule GenerateSchedule(LayoutManager LManager) {
         SubjectSchedule schedule = new SubjectSchedule();
-        subjectsData = Resources.LoadAll<SubjectData>("Data/Subjects");
-        teachersData = Resources.LoadAll<TeacherData>("Data/Teachers");
-        studentsData = Resources.LoadAll<StudentData>("Data/Students");
-        //subjectsData = (SubjectData[])Resources.FindObjectsOfTypeAll(typeof(SubjectData));
-        //teachersData = (TeacherData[])Resources.FindObjectsOfTypeAll(typeof(TeacherData));
-        //studentsData = (StudentData[])Resources.FindObjectsOfTypeAll(typeof(StudentData));
+        SubjectData[]  subjectsData = Resources.LoadAll<SubjectData>("Data/Subjects");
+        TeacherData[] teachersData = Resources.LoadAll<TeacherData>("Data/Teachers");
+        StudentData[] studentsData = Resources.LoadAll<StudentData>("Data/Students");
 
         if (logs) Debug.Log(subjectsData.Length);
         if (logs) Debug.Log(studentsData.Length);

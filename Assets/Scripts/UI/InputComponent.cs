@@ -16,6 +16,7 @@ public class InputComponent : MonoBehaviour
     {
         freeCam = Camera.main.transform.GetComponent<FreeCamera>();
         followCam = Camera.main.transform.GetComponent<FollowCamera>();
+
     }
     void Update()
     {
@@ -57,15 +58,15 @@ public class InputComponent : MonoBehaviour
             if (Cursor.lockState == CursorLockMode.Locked)
                 freeCam.active = true;
         }
-        else if (Input.GetKeyDown(KeyCode.P))
+        else if (Input.GetKeyDown(KeyCode.I))
         {
             followCam.ChangeTargetSimulation(simulation.virus);
         }
-        else if (Input.GetKeyDown(KeyCode.I))
+        else if (Input.GetKeyDown(KeyCode.O))
         {
             followCam.ChangeTargetSimulation(simulation.zombie);
         }
-        else if (Input.GetKeyDown(KeyCode.O))
+        else if (Input.GetKeyDown(KeyCode.P))
         {
             if (fireAlarm != null)
                 fireAlarm.ToggleAllActive();
@@ -78,6 +79,7 @@ public class InputComponent : MonoBehaviour
     
     public void toggleOptionsMenu()
     {
-        optionObject.SetActive(!optionObject.activeSelf);
+        if(optionObject != null)
+            optionObject.SetActive(!optionObject.activeSelf);
     }
 }
