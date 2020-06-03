@@ -48,15 +48,16 @@ public class InputComponent : MonoBehaviour
             if (lockCam)
             {
                 freeCam.active = false;
-
+                agUI.updateUI(ag);
             }
-            agUI.updateUI(ag);
+            
         }
         else if (Input.GetButton("Fire2"))
         {
             followCam.Deselect();
             if (Cursor.lockState == CursorLockMode.Locked)
                 freeCam.active = true;
+            agUI.updateUI(null);
         }
         else if (Input.GetKeyDown(KeyCode.I))
         {

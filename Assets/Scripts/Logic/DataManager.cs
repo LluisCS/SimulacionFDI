@@ -41,6 +41,9 @@ public class DataManager : MonoBehaviour
         foreach (var teacher in teachersData)
         {
             GameObject agentObj = Instantiate(agentPrefab);
+            int modelNum = Random.Range(0, 2);
+            agentObj.transform.GetChild(modelNum).gameObject.SetActive(false);
+            Destroy(agentObj.transform.GetChild((modelNum + 1) % 2).gameObject);
             agentObj.transform.SetParent(agentParent.transform);
             Agent agentComp = agentObj.GetComponent<Agent>();
             agentComp.state.type = agentType.teacher;
@@ -74,6 +77,9 @@ public class DataManager : MonoBehaviour
         foreach (var student in studentsData)
         {
             GameObject agentObj = Instantiate(agentPrefab);
+            int modelNum = Random.Range(0, 2);
+            agentObj.transform.GetChild(modelNum).gameObject.SetActive(false);
+            Destroy(agentObj.transform.GetChild((modelNum + 1) % 2).gameObject);
             agentObj.transform.SetParent(agentParent.transform);
             Agent agentComp = agentObj.GetComponent<Agent>();
             agentComp.state.per = student.per;

@@ -235,6 +235,7 @@ public class Agent : MonoBehaviour
         gameObject.SetActive(true);
         transform.position = Vector3.zero;
         GetComponent<MeshRenderer>().enabled = false;
+        transform.GetChild(0).gameObject.SetActive(false);
         if (state.type == agentType.teacher)
             material.color = Color.yellow;
         else
@@ -296,9 +297,11 @@ public class Agent : MonoBehaviour
                 material.color = Color.blue;
                 break;
             case simulation.virus:
+                LogSystem.Instance().Log(name + " got infected", logType.disease);
                 material.color = Color.green;
                 break;
             case simulation.fire:
+                LogSystem.Instance().Log(name + " started evacuating", logType.fire);
                 material.color = Color.red;
                 state.action = agentAction.inactive;
                 MoveToRandomExit();
@@ -306,6 +309,7 @@ public class Agent : MonoBehaviour
             case simulation.special:
                 break;
             case simulation.zombie:
+                LogSystem.Instance().Log(name + " became a zombie", logType.zombie);
                 material.color = Color.black;
                 state.action = agentAction.work;
                 break;
@@ -409,7 +413,10 @@ public class Agent : MonoBehaviour
         if(other.GetComponent<Exit>() != null)
         {
             if(state.action == agentAction.inactive)
+            {
+                LogSystem.Instance().Log(name + " abandoned the faculty ");
                 EndDay();
+            }
         }
     }
 
@@ -424,10 +431,11 @@ public class Agent : MonoBehaviour
     {
         if (state.action == agentAction.inactive)
         {
-            
+            LogSystem.Instance().Log(name + " entered the building ");
             gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
             navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
             GetComponent<MeshRenderer>().enabled = true;
+            transform.GetChild(0).gameObject.SetActive(true);
         }
         state.action = agentAction.enter;
     }

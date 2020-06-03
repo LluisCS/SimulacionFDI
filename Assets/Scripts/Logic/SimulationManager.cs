@@ -81,6 +81,8 @@ public class SimulationManager : MonoBehaviour
 
     private void StartDay(weekDay day)
     {
+        LogSystem.Instance().StartDay();
+
         foreach (Transform student in dataManager.agentParent.transform)
         {
             Agent ag = student.GetComponent<Agent>();

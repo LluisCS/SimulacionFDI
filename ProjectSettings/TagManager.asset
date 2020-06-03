@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Sillas
+  - Hitbox
   layers:
   - Default
   - TransparentFX

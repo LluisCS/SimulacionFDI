@@ -6,7 +6,7 @@ public class FollowCamera : MonoBehaviour
     private Transform target = null;
 
     public float smoothSpeed = 1.25f;
-    public Vector3 offset;
+    public Vector3 offset, positionOffset;
     private bool active = false;
 
     void LateUpdate()
@@ -17,7 +17,7 @@ public class FollowCamera : MonoBehaviour
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed*Time.deltaTime);
         transform.position = smoothedPosition;
 
-        transform.LookAt(target);
+        transform.LookAt(target.position + positionOffset);
     }
 
     public bool Select(out Agent ag)
