@@ -104,5 +104,6 @@ public class DayTime : MonoBehaviour
             day = 0;
         hours = initialHour;
         minutes = initialMinute;
+        SimulationManager.Instance().EndDay();
     }
 }

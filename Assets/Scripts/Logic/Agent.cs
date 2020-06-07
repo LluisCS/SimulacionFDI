@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 public enum agentAction { inactive, enter, work, exit, relax}
 public enum agentType { student, teacher, other }
-public enum simulation { regular, virus, fire, special, zombie, aliens}
+public enum simulation { regular, infection, fire, special, zombie, aliens}
 [System.Serializable]
 public enum personality { standard, late, early, chaotic }
 
@@ -36,7 +36,9 @@ public class Agent : MonoBehaviour
     private Room targetRoom = null;
     private int remainingSubjects = 0, activityIndex = -1;
     private bool pause = false;
+    public bool initedDay = false;
     private double timer = 0;
+    public bool canInfect = false;
     
     private Material material;
     private Transform followTarget = null;
@@ -101,7 +103,6 @@ public class Agent : MonoBehaviour
             case subjectState.start:
                 if (state.action != agentAction.work)
                 {
-                    SetUp();
                     ResetTarget();
                     currentSubject = n;
                     targetRoom = room;
@@ -117,7 +118,6 @@ public class Agent : MonoBehaviour
             case subjectState.active:
                 if( currentSubject == "None" || (state.action != agentAction.work && state.action != agentAction.enter) )
                 {
-                    SetUp();
                     ResetTarget();
                     currentSubject = n;
                     targetRoom = room;
@@ -197,7 +197,7 @@ public class Agent : MonoBehaviour
                         else
                             targetSeat = targetRoom.getFirstFreeSeat();
                         targetSeat.occupied = true;
-                        SetUp();
+                        state.action = agentAction.enter;
                         Invoke("MoveToDestination", GetDelay());
                     }
                 }
@@ -214,32 +214,30 @@ public class Agent : MonoBehaviour
         targetSeat = null;
         currentSubject = "None";
         activityIndex = -1;
-        navAgent.isStopped = true;
-        navAgent.ResetPath();
+        //navAgent.isStopped = true;
+        //navAgent.ResetPath();
     }
     //Process end of day
-    private void EndDay()
+    public void EndDay()
     {
         gameObject.SetActive(false);
-        state.action = agentAction.inactive;
+        canInfect = false;
+        initedDay = false;
+        ChangeSimulation(simulation.regular);
     }
     //Process start of day
     public void StartDay()
     {
         ResetTarget();
-        EndDay();
+        state.action = agentAction.inactive;
         remainingSubjects = 0;
         weekDay day = DayTime.Instance().WeekDay();
         state.pendingActivity = activities.Count > 0;
-        ChangeSimulation(simulation.regular);
         gameObject.SetActive(true);
         transform.position = Vector3.zero;
         GetComponent<MeshRenderer>().enabled = false;
         transform.GetChild(0).gameObject.SetActive(false);
-        if (state.type == agentType.teacher)
-            material.color = Color.yellow;
-        else
-            material.color = Color.blue;
+        
     }
 
     public void AddSubjectCount()
@@ -248,8 +246,15 @@ public class Agent : MonoBehaviour
     }
 
     private void MoveToDestination() {
+        SetUp();
         navAgent.SetDestination(targetSeat.position);
         state.moving = true;
+        if (canInfect && !SimulationManager.Instance().infectionInfo.safe)
+        {
+            GameObject ent = Instantiate(SimulationManager.Instance().infectionInfo.prefab);
+            ent.transform.SetParent(SimulationManager.Instance().infectionInfo.parentObject.transform);
+        }
+
     }
 
     private void MoveToRandomExit()
@@ -261,27 +266,25 @@ public class Agent : MonoBehaviour
     //Obtains a random delay for agent actions or movements depending on its personality
     private float GetDelay()
     {
-        float delay = 0.0f;
         float ran = 0;
         switch (state.per)
         {
             case personality.standard:
-                ran = Random.Range(1, 3);
+                ran = Random.Range(1, 4);
                 break;
             case personality.late:
                 ran = Random.Range(3, 6);
                 break;
             case personality.early:
-                ran = Random.Range(0, 2);
+                ran = Random.Range(0, 3);
                 break;
             case personality.chaotic:
-                ran = Random.Range(0, 6);
+                ran = Random.Range(0, 7);
                 break;
             default:
                 break;
         }
-        delay += ran;
-        delay = (delay * 60) / (float)DayTime.Instance().getTimeSpeed();
+        float delay = (ran * 60.0f) / (float)DayTime.Instance().getTimeSpeed();
         return delay;
     }
     public void TogglePause()
@@ -294,9 +297,12 @@ public class Agent : MonoBehaviour
         switch (s)
         {
             case simulation.regular:
-                material.color = Color.blue;
+                if (state.type == agentType.teacher)
+                    material.color = Color.yellow;
+                else
+                    material.color = Color.blue;
                 break;
-            case simulation.virus:
+            case simulation.infection:
                 LogSystem.Instance().Log(name + " got infected", logType.disease);
                 material.color = Color.green;
                 break;
@@ -327,23 +333,27 @@ public class Agent : MonoBehaviour
             case simulation.regular:
                 ActivityUpdate();
                 break;
-            case simulation.virus:
+            case simulation.infection:
                 ActivityUpdate();
-                if (timer < Time.time)
+                if (canInfect && initedDay && timer < Time.time)
                 {
-                    timer = Time.time + delay;
+                    timer = Time.time + (SimulationManager.Instance().infectionInfo.getInfectRatio() * 60)/ DayTime.Instance().timeSpeed;
                     foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
                     {
-                        if (Vector3.Distance(t.position, transform.position) > 5)
-                            continue;
-                        Agent ag = t.transform.GetComponent<Agent>();
-                        if (ag.state.sim != simulation.virus)
-                            ag.ChangeSimulation(simulation.virus);
+                        if (Vector3.Distance(t.position, transform.position) < SimulationManager.Instance().infectionInfo.getInfectRange())
+                        {
+                            if (Random.Range(0, 1.0f) < SimulationManager.Instance().infectionInfo.getInfectChance())
+                            {
+                                Agent ag = t.transform.GetComponent<Agent>();
+                                if (ag.state.sim != simulation.infection)
+                                    ag.ChangeSimulation(simulation.infection);
+                            }
+                        }
                     }
                 }
                 break;
             case simulation.fire:
-                if (timer < Time.time)
+                if (timer < Time.time && initedDay)
                 {
                     timer = Time.time + delay;
                    
@@ -360,7 +370,7 @@ public class Agent : MonoBehaviour
             case simulation.special:
                 break;
             case simulation.zombie:
-                if (timer < Time.time)
+                if (timer < Time.time && initedDay)
                 {
                     timer = Time.time + delay;
                     float minDist = 1000;
@@ -374,7 +384,7 @@ public class Agent : MonoBehaviour
 
                         Agent ag = t.transform.GetComponent<Agent>();
 
-                        if (ag.state.sim == simulation.zombie)
+                        if (ag.state.sim == simulation.zombie || !ag.gameObject.activeSelf)
                             continue;
                        
                         if (ag.state.sim != simulation.fire)
@@ -429,14 +439,21 @@ public class Agent : MonoBehaviour
 
     private void SetUp()
     {
-        if (state.action == agentAction.inactive)
+        if (!initedDay)
         {
             LogSystem.Instance().Log(name + " entered the building ");
             gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
             navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
             GetComponent<MeshRenderer>().enabled = true;
             transform.GetChild(0).gameObject.SetActive(true);
+            initedDay = true;
         }
-        state.action = agentAction.enter;
+    }
+
+    public void startInfection()
+    {
+        ChangeSimulation(simulation.infection);
+        canInfect = true;
+        material.color = Color.magenta;
     }
 }

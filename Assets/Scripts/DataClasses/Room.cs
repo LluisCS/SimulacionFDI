@@ -21,10 +21,23 @@ public class Room
     }
     public Seat getFirstFreeSeat()
     {
-        foreach (var seat in seats)
+        if (SimulationManager.Instance().infectionInfo.safe)
         {
-            if (!seat.occupied)
-                return seat;
+            for (int i = 0; i < seats.Count; i++)
+            {
+                if (seats[i].occupied)
+                    i++;
+                else
+                    return seats[i];
+            }   
+        }
+        else
+        {
+            foreach (var seat in seats)
+            {
+                if (!seat.occupied)
+                    return seat;
+            }
         }
         Debug.LogWarning("No empty seat found in room " + name);
         return null;

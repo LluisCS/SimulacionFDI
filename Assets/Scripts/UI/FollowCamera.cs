@@ -45,11 +45,17 @@ public class FollowCamera : MonoBehaviour
         active = false;
     }
 
-    public void ChangeTargetSimulation(simulation sim)
+    public bool ChangeTargetSimulation(simulation sim)
     {
         if(target != null)
         {
-            target.GetComponent<Agent>().ChangeSimulation(sim);
+            if (sim == simulation.infection)
+                target.GetComponent<Agent>().startInfection();
+            else
+                target.GetComponent<Agent>().ChangeSimulation(sim);
+            
+            return true;
         }
+        return false;
     }
 }

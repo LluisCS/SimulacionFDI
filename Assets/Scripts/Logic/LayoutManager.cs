@@ -65,12 +65,12 @@ public class LayoutManager : MonoBehaviour
         return null;
     }
 
-    public Vector3 getRandomPosition()
-    {
-        Vector3 pos = Vector3.zero;
+    //public Vector3 getRandomPosition()
+    //{
+    //    Vector3 pos = Vector3.zero;
 
-        return pos;
-    }
+    //    return pos;
+    //}
 
     //public Floor getRoomFloor(string name)
     //{

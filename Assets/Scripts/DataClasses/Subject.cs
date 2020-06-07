@@ -51,7 +51,7 @@ public class Subject
                 }
                 break;
             case subjectState.active:
-                if ((h * 60) + min > (endHour * 60) + endMinute)
+                if ((h * 60) + min > (endHour * 60) + endMinute - 5)
                 {
                     info.state = subjectState.end;
                     MessageAgents();
@@ -68,7 +68,7 @@ public class Subject
                 }
                 break;
             case subjectState.inactive:
-                if ((h * 60) + min > (startHour * 60) + startMinute - 6 && (h * 60) + min < (endHour * 60) + endMinute)
+                if ((h * 60) + min > (startHour * 60) + startMinute - 8 && (h * 60) + min < (endHour * 60) + endMinute)
                 {
                     op = operation.add;
                     info.state = subjectState.start;

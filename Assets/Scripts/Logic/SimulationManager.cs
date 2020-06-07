@@ -17,6 +17,7 @@ public class SimulationManager : MonoBehaviour
     public DataManager dataManager;
     private LayoutManager layoutManager;
     public SubjectSchedule schedule;
+    public InfectionSimulationInfo infectionInfo;
     public bool logs = false;
     private weekDay day = weekDay.Monday;
     public SubjectUI subjectUI;
@@ -42,6 +43,7 @@ public class SimulationManager : MonoBehaviour
 
         schedule = dataManager.GenerateSchedule(layoutManager);
 
+        EndDay();
         StartDay(DayTime.Instance().WeekDay());
         UpdateSpeed();
     }
@@ -163,5 +165,30 @@ public class SimulationManager : MonoBehaviour
     public float GetAgentSpeed()
     {
         return speedMultiplier * initialAgentSpeed;
+    }
+
+    public void startSimulationEvent(simulation sim)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            int r = Random.Range(0, dataManager.agentParent.transform.childCount);
+            Agent ag = dataManager.agentParent.transform.GetChild(r).GetComponent<Agent>();
+            if (ag.state.sim != sim)
+            {
+                if (sim == simulation.infection)
+                    ag.startInfection();
+                else
+                    ag.ChangeSimulation(sim);
+            }
+        }
+    }
+
+    public void EndDay()
+    {
+        foreach (Transform student in dataManager.agentParent.transform)
+        {
+            Agent ag = student.GetComponent<Agent>();
+            ag.EndDay();
+        }
     }
 }

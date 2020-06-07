@@ -41361,6 +41361,7 @@ GameObject:
   - component: {fileID: 1473428256}
   - component: {fileID: 1473428257}
   - component: {fileID: 1473428258}
+  - component: {fileID: 1473428259}
   m_Layer: 0
   m_Name: SimManager
   m_TagString: Untagged
@@ -41443,6 +41444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataManager: {fileID: 0}
+  infectionInfo: {fileID: 1473428259}
   logs: 0
   subjectUI: {fileID: 1419358594}
   speedText: {fileID: 481875648}
@@ -41464,6 +41466,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
+--- !u!114 &1473428259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473428252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0457173c019fb24f848aa1d45a7e439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infectRatio: 10
+  infectChance: 0.08
+  infectRange: 3
+  safeInfRatio: 10
+  safeInfChance: 0.03
+  safeInfRange: 2
+  prefab: {fileID: 9165255627338815966, guid: 325ef88cb6850ea42963273be43d6d24, type: 3}
+  parentObject: {fileID: 0}
+  safe: 0
 --- !u!1 &1477700256
 GameObject:
   m_ObjectHideFlags: 0

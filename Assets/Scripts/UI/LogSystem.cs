@@ -35,6 +35,7 @@ public class LogSystem : MonoBehaviour
     {
         if (logFile != null)
         {
+            Log("End of the day");
             WriteLogs();
             logFile.Close();
         }

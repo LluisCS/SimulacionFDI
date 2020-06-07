@@ -59,16 +59,25 @@ public class InputComponent : MonoBehaviour
                 freeCam.active = true;
             agUI.updateUI(null);
         }
+        else if (Input.GetKeyDown(KeyCode.U))
+        {
+            SimulationManager.Instance().infectionInfo.toggleProtocol();
+        }
         else if (Input.GetKeyDown(KeyCode.I))
         {
-            followCam.ChangeTargetSimulation(simulation.virus);
+            LogSystem.Instance().Log("Infection started");
+            if (!followCam.ChangeTargetSimulation(simulation.infection))
+                SimulationManager.Instance().startSimulationEvent(simulation.infection);            
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
-            followCam.ChangeTargetSimulation(simulation.zombie);
+            LogSystem.Instance().Log("Zombie event started");
+            if (!followCam.ChangeTargetSimulation(simulation.zombie))
+                SimulationManager.Instance().startSimulationEvent(simulation.zombie);
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
+            LogSystem.Instance().Log("Fire started");
             if (fireAlarm != null)
                 fireAlarm.ToggleAllActive();
         }
