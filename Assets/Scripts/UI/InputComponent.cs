@@ -10,7 +10,7 @@ public class InputComponent : MonoBehaviour
     public AgentUI agUI;
     private FreeCamera freeCam;
     private FollowCamera followCam;
-    private bool pause = false, lockCam = false, freeCursor = true;
+    private bool pause = false, freeCursor = true;
     
     void Start()
     {
@@ -29,35 +29,30 @@ public class InputComponent : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            freeCursor = !freeCursor;
-            if (freeCursor)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                freeCam.active = false;
-            }
+            if (optionObject.activeSelf)
+                toggleOptionsMenu();
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                freeCam.active = !lockCam;
+                freeCursor = !freeCursor;
+                UpdateCursor();
             }
         }
-        else if (Input.GetButton("Fire1"))
+        else if (Input.GetButtonDown("Fire1"))
         {
             Agent ag;
-            lockCam = followCam.Select(out ag);
-            if (lockCam)
+            if (!freeCursor && followCam.Select(out ag))
             {
                 freeCam.active = false;
                 agUI.updateUI(ag);
             }
             
         }
-        else if (Input.GetButton("Fire2"))
+        else if (Input.GetButtonDown("Fire2"))
         {
             followCam.Deselect();
-            if (Cursor.lockState == CursorLockMode.Locked)
-                freeCam.active = true;
             agUI.updateUI(null);
+            if (!freeCursor)
+                freeCam.active = true;
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
@@ -92,7 +87,28 @@ public class InputComponent : MonoBehaviour
     
     public void toggleOptionsMenu()
     {
-        if(optionObject != null)
-            optionObject.SetActive(!optionObject.activeSelf);
+
+        if (optionObject == null)
+            return;
+        optionObject.SetActive(!optionObject.activeSelf);
+        freeCursor = optionObject.activeSelf;
+        UpdateCursor();
+    }
+    private void UpdateCursor()
+    {
+        if (freeCursor)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            freeCam.active = false;
+            followCam.Deselect();
+            //agUI.updateUI(null);
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            freeCam.active = true;
+        }
     }
 }
