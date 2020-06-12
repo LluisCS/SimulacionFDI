@@ -10,7 +10,9 @@ public class InputComponent : MonoBehaviour
     public AgentUI agUI;
     private FreeCamera freeCam;
     private FollowCamera followCam;
+    public GameObject cameraPositions;
     private bool pause = false, freeCursor = true;
+    private int positionIndex = 0;
     
     void Start()
     {
@@ -82,6 +84,26 @@ public class InputComponent : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             toggleOptionsMenu();
+        }
+        else if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (!freeCam.active)
+                return;
+            positionIndex++;
+            if (positionIndex >= cameraPositions.transform.childCount)
+                positionIndex = 0;
+            Camera.main.transform.position = cameraPositions.transform.GetChild(positionIndex).transform.position;
+            Camera.main.transform.rotation = cameraPositions.transform.GetChild(positionIndex).rotation;
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (!freeCam.active)
+                return;
+            positionIndex--;
+            if (positionIndex < 0)
+                positionIndex = cameraPositions.transform.childCount - 1;
+            Camera.main.transform.position = cameraPositions.transform.GetChild(positionIndex).transform.position;
+            Camera.main.transform.rotation = cameraPositions.transform.GetChild(positionIndex).rotation;
         }
     }
     
