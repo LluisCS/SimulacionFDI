@@ -65,18 +65,21 @@ public class InputComponent : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.I))
         {
-            LogSystem.Instance().Log("Infection started");
+            LogSystem.Instance().Log("Disease infection started");
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Disease infection started");
             if (!followCam.ChangeTargetSimulation(simulation.infection))
                 SimulationManager.Instance().startSimulationEvent(simulation.infection);            
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
-            LogSystem.Instance().Log("Zombie event started");
+            LogSystem.Instance().Log("Zombie infection started");
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Zombie infection started");
             if (!followCam.ChangeTargetSimulation(simulation.zombie))
                 SimulationManager.Instance().startSimulationEvent(simulation.zombie);
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Fire started");
             LogSystem.Instance().Log("Fire started");
             if (fireAlarm != null)
                 fireAlarm.ToggleAllActive();

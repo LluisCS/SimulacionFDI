@@ -21,6 +21,7 @@ public class SimulationManager : MonoBehaviour
     public bool logs = false;
     private weekDay day = weekDay.Monday;
     public SubjectUI subjectUI;
+    public FeedbackUI feedbackUI;
     public Text speedText;
     public float initialAgentSpeed = 2.0f, initialTimeSpeed = 60.0f;
     public float speedInrement = 0.5f, maxSpeed = 10.0f, minSpeed = 0.5f;
@@ -84,7 +85,7 @@ public class SimulationManager : MonoBehaviour
     private void StartDay(weekDay day)
     {
         LogSystem.Instance().StartDay();
-
+        feedbackUI.ShowFeedback("Started new day");
         foreach (Transform student in dataManager.agentParent.transform)
         {
             Agent ag = student.GetComponent<Agent>();

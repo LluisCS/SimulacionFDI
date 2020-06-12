@@ -47,7 +47,8 @@ public class Subject
                 {
                     info.state = subjectState.active;
                     MessageAgents();
-                    LogSystem.Instance().Log(info.name + " is a about to begin in " + room.name);
+                    LogSystem.Instance().Log(info.name + " has just started");
+                    
                 }
                 break;
             case subjectState.active:
@@ -55,7 +56,7 @@ public class Subject
                 {
                     info.state = subjectState.end;
                     MessageAgents();
-                    LogSystem.Instance().Log(info.name + " has just started");
+                    LogSystem.Instance().Log(info.name + " is ending"); 
                 }
                 break;
             case subjectState.end:
@@ -64,7 +65,7 @@ public class Subject
                     op = operation.remove;
                     info.state = subjectState.inactive;
                     MessageAgents();
-                    LogSystem.Instance().Log(info.name + " is ending");
+                    
                 }
                 break;
             case subjectState.inactive:
@@ -73,6 +74,7 @@ public class Subject
                     op = operation.add;
                     info.state = subjectState.start;
                     MessageAgents();
+                    LogSystem.Instance().Log(info.name + " is a about to begin in " + room.name);
                 }
                 break;
             default:

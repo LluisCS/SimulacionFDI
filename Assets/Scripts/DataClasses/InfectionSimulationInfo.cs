@@ -44,9 +44,15 @@ public class InfectionSimulationInfo: MonoBehaviour
     public void toggleProtocol()
     {
         safe = !safe;
-        if(safe)
-            LogSystem.Instance().Log("Safe infection protocol ACTIVE");
+        if (safe)
+        {
+            LogSystem.Instance().Log("Safety infection protocol ACTIVE");
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Safety infection protocol ACTIVE");
+        }
         else
-            LogSystem.Instance().Log("Safe infection protocol INACTIVE");
+        {
+            LogSystem.Instance().Log("Safety infection protocol INACTIVE");
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Safety infection protocol INACTIVE");
+        }
     }
 }

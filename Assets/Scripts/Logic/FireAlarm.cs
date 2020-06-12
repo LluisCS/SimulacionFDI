@@ -10,16 +10,17 @@ public class FireAlarm : MonoBehaviour
 
     void Update()
     {
-        return;
         if (active && timer < Time.time)
         {
             timer = Time.time + delay;
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 12, transform.forward);
-            foreach (var hit in hits)
+            foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
             {
-                Agent ag = hit.transform.GetComponent<Agent>();
-                if (ag != null && ag.state.sim != simulation.fire)
-                    ag.ChangeSimulation(simulation.fire);
+                if (Vector3.Distance(t.position, transform.position) < 5)
+                {
+                    Agent ag = t.transform.GetComponent<Agent>();
+                    if (ag.state.sim != simulation.fire && ag.initedDay)
+                        ag.ChangeSimulation(simulation.fire);
+                }
             }
         }
     }

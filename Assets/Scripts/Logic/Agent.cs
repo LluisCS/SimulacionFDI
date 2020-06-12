@@ -76,6 +76,10 @@ public class Agent : MonoBehaviour
                     state.action = agentAction.work;
                 else if (state.action == agentAction.exit)
                     state.action = agentAction.relax;
+
+                if (targetRoom != null)
+                    transform.LookAt(targetRoom.entrance);
+
             }
         }
         //check no more pending tasks
@@ -252,6 +256,7 @@ public class Agent : MonoBehaviour
         if (canInfect && !SimulationManager.Instance().infectionInfo.safe)
         {
             GameObject ent = Instantiate(SimulationManager.Instance().infectionInfo.prefab);
+            ent.transform.position = transform.position;
             ent.transform.SetParent(SimulationManager.Instance().infectionInfo.parentObject.transform);
         }
 
@@ -424,7 +429,7 @@ public class Agent : MonoBehaviour
         {
             if(state.action == agentAction.inactive)
             {
-                LogSystem.Instance().Log(name + " abandoned the faculty ");
+                LogSystem.Instance().Log(name + " abandoned the faculty ", logType.exit);
                 EndDay();
             }
         }
@@ -441,7 +446,7 @@ public class Agent : MonoBehaviour
     {
         if (!initedDay)
         {
-            LogSystem.Instance().Log(name + " entered the building ");
+            LogSystem.Instance().Log(name + " entered the building ", logType.enter);
             gameObject.transform.position = SimulationManager.Instance().GetRandomEntrance();
             navAgent.speed = SimulationManager.Instance().GetAgentSpeed();
             GetComponent<MeshRenderer>().enabled = true;

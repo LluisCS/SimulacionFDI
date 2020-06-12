@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SubjectData
   name: SON
   classes:
-  - roomName: Aula6
+  - roomName: Aula7
     name: 
     day: 1
     startHour: 14

@@ -44,6 +44,9 @@ public class Room
     }
     public Seat getTeacherSeat()
     {
+        if (name == "Cafeteria")
+            return getFirstFreeSeat();
+
         foreach (var seat in teacherSeats)
         {
             if (!seat.occupied)
