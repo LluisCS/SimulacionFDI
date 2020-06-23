@@ -60,6 +60,7 @@ public class SimulationManager : MonoBehaviour
         uint hour = (uint)DayTime.Instance().Hour();
         uint minute = (uint)DayTime.Instance().Minute();
         //Debug.Log((int)day);
+        bool updateUI = false;
         foreach (Subject s in schedule.days[(int)day])
         {
             //if (logs) Debug.Log(s.name + " exists");
@@ -70,28 +71,32 @@ public class SimulationManager : MonoBehaviour
                 if (logs) Debug.Log(s.info.name + " has started.");
                 schedule.activeSubjects.Add(s);
                 s.room.occupied = true;
-                subjectUI.UpdateUI(schedule.activeSubjects);
+                updateUI = true;
             }
             else if(op== operation.remove)
             {
                 if (logs) Debug.Log(s.info.name + " has ended.");
                 schedule.activeSubjects.Remove(s);
-                s.room.occupied = false;
-                subjectUI.UpdateUI(schedule.activeSubjects);
+                s.room.occupied = false;               
+                updateUI = true;
             }
         }
+        if(updateUI)
+            subjectUI.UpdateUI(schedule.activeSubjects);
     }
 
     private void StartDay(weekDay day)
     {
-        LogSystem.Instance().StartDay();
+       
         feedbackUI.ShowFeedback("Started new day");
         foreach (Transform student in dataManager.agentParent.transform)
         {
             Agent ag = student.GetComponent<Agent>();
             ag.StartDay();
         }
-        
+
+        LogSystem.Instance().StartDay();
+
         foreach (var s in schedule.activeSubjects)
         {
             s.room.occupied = false;

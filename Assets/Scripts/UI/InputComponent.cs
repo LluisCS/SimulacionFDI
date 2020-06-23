@@ -75,9 +75,7 @@ public class InputComponent : MonoBehaviour
                 SimulationManager.Instance().startSimulationEvent(simulation.zombie);
         }
         else if (Input.GetKeyDown(KeyCode.P))
-        {
-            SimulationManager.Instance().feedbackUI.ShowFeedback("Fire started");
-            LogSystem.Instance().Log("Fire started");
+        {           
             if (fireAlarm != null)
                 fireAlarm.ToggleAllActive();
         }

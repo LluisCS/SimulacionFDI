@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae44bb7687d0a5e46bc311d7eedbdc69, type: 3}
+  m_Name: DV2
+  m_EditorClassIdentifier: Assembly-CSharp::SubjectData
+  name: DV2
+  classes:
+  - roomName: Aula6
+    name: 
+    day: 2
+    startHour: 18
+    startMinute: 5
+    durationHours: 1
+    durationMinutes: 40
+  - roomName: Lab7
+    name: 
+    day: 3
+    startHour: 18
+    startMinute: 5
+    durationHours: 1
+    durationMinutes: 40

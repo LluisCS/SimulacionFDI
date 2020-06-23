@@ -7,7 +7,7 @@ public enum logType { disease, zombie, fire, enter, exit, none};
 
 public class LogSystem : MonoBehaviour
 {
-    public bool active = true;
+    //public bool active = true;
     private static int logNumber = 0;
     static private LogSystem instance;
     private List<string> logs;
@@ -23,7 +23,7 @@ public class LogSystem : MonoBehaviour
 
     void Awake()
     {
-        if (instance == null && active)
+        if (instance == null)
             instance = this;
         else
             Destroy(this);

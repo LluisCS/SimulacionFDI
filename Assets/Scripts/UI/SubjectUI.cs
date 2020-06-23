@@ -54,7 +54,7 @@ public class SubjectUI : MonoBehaviour
         }
         while (m > n)
         {
-            Destroy(desplegable.GetChild(desplegable.childCount - 1).gameObject);
+            Destroy(desplegable.GetChild(m - 1).gameObject);
             m--;
         }
         int i = 0;
@@ -64,6 +64,6 @@ public class SubjectUI : MonoBehaviour
             t.text = activeSubjects[i].info.name + " - " + activeSubjects[i].room.name;
             i++;
         }
-      
+        
     }
 }

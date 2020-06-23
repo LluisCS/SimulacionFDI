@@ -72,6 +72,7 @@ public class Agent : MonoBehaviour
             if (!navAgent.pathPending && navAgent.remainingDistance <= navAgent.stoppingDistance)
             {
                 state.moving = false;
+                navAgent.ResetPath();
                 if (state.action == agentAction.enter)
                     state.action = agentAction.work;
                 else if (state.action == agentAction.exit)
@@ -224,6 +225,9 @@ public class Agent : MonoBehaviour
     //Process end of day
     public void EndDay()
     {
+        if (initedDay)
+            LogSystem.Instance().Log(name + " abandoned the faculty ", logType.exit);
+
         gameObject.SetActive(false);
         canInfect = false;
         initedDay = false;
@@ -250,6 +254,7 @@ public class Agent : MonoBehaviour
     }
 
     private void MoveToDestination() {
+        if (!gameObject.activeSelf) return;
         SetUp();
         navAgent.SetDestination(targetSeat.position);
         state.moving = true;
@@ -264,6 +269,7 @@ public class Agent : MonoBehaviour
 
     private void MoveToRandomExit()
     {
+        if (!gameObject.activeSelf) return;
         navAgent.SetDestination(SimulationManager.Instance().GetRandomEntrance());
         state.moving = true;
     }
@@ -389,7 +395,7 @@ public class Agent : MonoBehaviour
 
                         Agent ag = t.transform.GetComponent<Agent>();
 
-                        if (ag.state.sim == simulation.zombie || !ag.gameObject.activeSelf)
+                        if (ag.state.sim == simulation.zombie || !ag.initedDay)
                             continue;
                        
                         if (ag.state.sim != simulation.fire)
@@ -429,7 +435,6 @@ public class Agent : MonoBehaviour
         {
             if(state.action == agentAction.inactive)
             {
-                LogSystem.Instance().Log(name + " abandoned the faculty ", logType.exit);
                 EndDay();
             }
         }

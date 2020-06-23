@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FireAlarm : MonoBehaviour
 {
-    public bool active = false;
+    static private bool active = false;
     private double timer = 0;
     public double delay = 1f;
 
@@ -26,11 +26,16 @@ public class FireAlarm : MonoBehaviour
     }
 
     public void ToggleAllActive() {
-        foreach (Transform child in transform.parent.transform)
+        active = !active;
+        if (active)
         {
-            FireAlarm fa = child.GetComponent<FireAlarm>();
-            if (fa != null)
-                fa.active = !fa.active;
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Fire started");
+            LogSystem.Instance().Log("Fire started");
         }
+        else
+        {
+            SimulationManager.Instance().feedbackUI.ShowFeedback("Fire ended");
+            LogSystem.Instance().Log("Fire ended");
+        }            
     }
 }
