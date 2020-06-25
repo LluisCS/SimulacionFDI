@@ -59,7 +59,7 @@ public class LogSystem : MonoBehaviour
                 break;
             case logType.fire:
                 nFire++;
-                s = s + "   " + nFire + " character/s tried to evacuate the building.";
+                s = s + "   " + nFire + " character/s started evacuating.";
                 break;
             case logType.enter:
                 nCharacters++;

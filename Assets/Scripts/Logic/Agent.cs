@@ -69,10 +69,10 @@ public class Agent : MonoBehaviour
         //check destination reached
         if (state.moving)
         {
-            if (!navAgent.pathPending && navAgent.remainingDistance <= navAgent.stoppingDistance)
+            if (!navAgent.pathPending && navAgent.remainingDistance < navAgent.stoppingDistance)
             {
                 state.moving = false;
-                navAgent.ResetPath();
+                //navAgent.ResetPath();
                 if (state.action == agentAction.enter)
                     state.action = agentAction.work;
                 else if (state.action == agentAction.exit)
@@ -90,6 +90,7 @@ public class Agent : MonoBehaviour
             {
                 if(state.action == agentAction.relax)
                 {
+                    ResetTarget();
                     state.action = agentAction.inactive;
                     MoveToRandomExit();
                 }
@@ -133,6 +134,7 @@ public class Agent : MonoBehaviour
                     targetSeat.occupied = true;
                     state.action = agentAction.enter;
                     Invoke("MoveToDestination", GetDelay());
+                    Debug.Log("hehe");
                 }
                 break;
             case subjectState.end:
@@ -232,6 +234,7 @@ public class Agent : MonoBehaviour
         canInfect = false;
         initedDay = false;
         ChangeSimulation(simulation.regular);
+        ResetTarget();
     }
     //Process start of day
     public void StartDay()
@@ -254,7 +257,7 @@ public class Agent : MonoBehaviour
     }
 
     private void MoveToDestination() {
-        if (!gameObject.activeSelf) return;
+        if (targetSeat == null) return;
         SetUp();
         navAgent.SetDestination(targetSeat.position);
         state.moving = true;
@@ -321,6 +324,7 @@ public class Agent : MonoBehaviour
                 LogSystem.Instance().Log(name + " started evacuating", logType.fire);
                 material.color = Color.red;
                 state.action = agentAction.inactive;
+                ResetTarget();
                 MoveToRandomExit();
                 break;
             case simulation.special:
@@ -328,6 +332,7 @@ public class Agent : MonoBehaviour
             case simulation.zombie:
                 LogSystem.Instance().Log(name + " became a zombie", logType.zombie);
                 material.color = Color.black;
+                ResetTarget();
                 state.action = agentAction.work;
                 break;
             default:
@@ -430,7 +435,7 @@ public class Agent : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnTriggerStay(Collider other) {
         if(other.GetComponent<Exit>() != null)
         {
             if(state.action == agentAction.inactive)
