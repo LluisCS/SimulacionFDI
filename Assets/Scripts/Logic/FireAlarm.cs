@@ -18,7 +18,7 @@ public class FireAlarm : MonoBehaviour
                 if (Vector3.Distance(t.position, transform.position) < 5)
                 {
                     Agent ag = t.transform.GetComponent<Agent>();
-                    if (ag.state.sim != simulation.fire && ag.initedDay)
+                    if (ag.state.sim != simulation.fire && ag.state.sim != simulation.zombie)
                         ag.ChangeSimulation(simulation.fire);
                 }
             }

@@ -35,7 +35,7 @@ MonoBehaviour:
     startMinute: 9
     durationHours: 0
     durationMinutes: 50
-  - roomName: Aula3
+  - roomName: Aula0
     name: 
     day: 4
     startHour: 15

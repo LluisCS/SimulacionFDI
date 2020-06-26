@@ -98,6 +98,7 @@ public class Agent : MonoBehaviour
         }
 
     }
+
     //Updates agent state and actions according to the state of its subjects
     public void SubjectUpdate(string n, subjectState subState, Room room)
     {
@@ -164,6 +165,7 @@ public class Agent : MonoBehaviour
                 break;
         }
     }
+
     //Updates agent state and actions according to the activities
     private void ActivityUpdate() {
         if (!state.pendingActivity)
@@ -255,9 +257,10 @@ public class Agent : MonoBehaviour
     {
         remainingSubjects++;
     }
-
+    
+    //Initiates the character movement to a previously designated target
     private void MoveToDestination() {
-        if (targetSeat == null) return;
+        if (targetSeat == null || state.sim == simulation.fire || state.sim == simulation.zombie) return;
         SetUp();
         navAgent.SetDestination(targetSeat.position);
         state.moving = true;
@@ -270,6 +273,7 @@ public class Agent : MonoBehaviour
 
     }
 
+    //Initiates the character movements to a randomly chosen exit of the building
     private void MoveToRandomExit()
     {
         if (!gameObject.activeSelf) return;
@@ -321,7 +325,8 @@ public class Agent : MonoBehaviour
                 material.color = Color.green;
                 break;
             case simulation.fire:
-                LogSystem.Instance().Log(name + " started evacuating", logType.fire);
+                if(initedDay)
+                    LogSystem.Instance().Log(name + " started evacuating", logType.fire);
                 material.color = Color.red;
                 state.action = agentAction.inactive;
                 ResetTarget();
@@ -330,7 +335,8 @@ public class Agent : MonoBehaviour
             case simulation.special:
                 break;
             case simulation.zombie:
-                LogSystem.Instance().Log(name + " became a zombie", logType.zombie);
+                if(initedDay)
+                    LogSystem.Instance().Log(name + " became a zombie", logType.zombie);
                 material.color = Color.black;
                 ResetTarget();
                 state.action = agentAction.work;
@@ -375,7 +381,7 @@ public class Agent : MonoBehaviour
                    
                     foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
                     {
-                        if (Vector3.Distance(t.position, transform.position) > 8)
+                        if (Vector3.Distance(t.position, transform.position) > 7)
                             continue;
                         Agent ag = t.transform.GetComponent<Agent>();
                         if (ag.state.sim != simulation.fire && ag.state.sim != simulation.zombie)
@@ -395,7 +401,7 @@ public class Agent : MonoBehaviour
                     foreach (Transform t in SimulationManager.Instance().dataManager.agentParent.transform)
                     {
                         float dist = Vector3.Distance(t.transform.position, transform.position);
-                        if (dist > 8)
+                        if (dist > 6)
                             continue;
 
                         Agent ag = t.transform.GetComponent<Agent>();
@@ -452,6 +458,7 @@ public class Agent : MonoBehaviour
         navAgent.speed = speed;
     }
 
+    //Prepares the agent to enter the scenario
     private void SetUp()
     {
         if (!initedDay)

@@ -59,11 +59,9 @@ public class SimulationManager : MonoBehaviour
         day = DayTime.Instance().WeekDay();
         uint hour = (uint)DayTime.Instance().Hour();
         uint minute = (uint)DayTime.Instance().Minute();
-        //Debug.Log((int)day);
         bool updateUI = false;
         foreach (Subject s in schedule.days[(int)day])
         {
-            //if (logs) Debug.Log(s.name + " exists");
 
             operation op = s.Update(hour, minute);
             if (op == operation.add)
@@ -153,8 +151,6 @@ public class SimulationManager : MonoBehaviour
 
         foreach (Agent ag in dataManager.agentParent.GetComponentsInChildren<Agent>())
             ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
-        //foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
-        //    ag.UpdateSpeed(speedMultiplier * initialAgentSpeed);
         speedText.text = "x " + speedMultiplier.ToString("F1");
     }
 
@@ -163,9 +159,6 @@ public class SimulationManager : MonoBehaviour
         pause = !pause;
         foreach (Agent ag in dataManager.agentParent.GetComponentsInChildren<Agent>())
             ag.TogglePause();
-        //foreach (Agent ag in dataManager.teacherParent.GetComponentsInChildren<Agent>())
-        //    ag.TogglePause();
-
     }
 
     public float GetAgentSpeed()
